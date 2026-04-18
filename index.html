@@ -92,7 +92,7 @@ h2 {
 
 .estrazione {
     color: #ffffff;
-    font-size: 24px;
+    font-size: 22px;
     line-height: 1.6;
     margin-bottom: 18px;
 }
@@ -142,21 +142,54 @@ h2 {
 <div class="subtitle">motore definitivo PRO</div>
 
 <div id="contenuto">
-    <h2>Caricamento previsioni...</h2>
+    <h2>Caricamento risultati.json...</h2>
 </div>
 
 <script>
-fetch("previsioni.json")
+fetch("risultati.json")
 .then(response => response.json())
 .then(data => {
 
     let html = "";
 
+    // prende tutte le ruote
+    let ruoteArray = [];
+
+    for (const ruota in data) {
+        const estrazioni = data[ruota];
+
+        if (!estrazioni || estrazioni.length === 0) continue;
+
+        // ultima estrazione = ultima lista
+        const ultima = estrazioni[estrazioni.length - 1];
+
+        // ambo forte = primi 2 numeri
+        const ambo = [ultima[0], ultima[1]];
+
+        // score semplice
+        const score = (
+            ultima.reduce((a, b) => a + b, 0) / 5
+        ).toFixed(2);
+
+        ruoteArray.push({
+            ruota: ruota,
+            ultima_estrazione: ultima,
+            numeri: ambo,
+            score: score
+        });
+    }
+
+    // TOP = primi 3
+    const top = ruoteArray.slice(0, 3);
+
+    // JOLLY = prima ruota
+    const jolly = ruoteArray[0];
+
     // TOP
     html += `<h2>🎯 TOP</h2>`;
     html += `<div class="grid-top">`;
 
-    data.top.forEach(item => {
+    top.forEach(item => {
         html += `
             <div class="card-top">
                 <div class="ruota">${item.ruota}</div>
@@ -168,19 +201,21 @@ fetch("previsioni.json")
     html += `</div>`;
 
     // JOLLY
-    html += `<h2>💣 JOLLY</h2>`;
-    html += `
-        <div class="card-jolly">
-            <div class="ruota">${data.jolly.ruota}</div>
-            <div class="ambo">${data.jolly.numeri[0]} — ${data.jolly.numeri[1]}</div>
-        </div>
-    `;
+    if (jolly) {
+        html += `<h2>💣 JOLLY</h2>`;
+        html += `
+            <div class="card-jolly">
+                <div class="ruota">${jolly.ruota}</div>
+                <div class="ambo">${jolly.numeri[0]} — ${jolly.numeri[1]}</div>
+            </div>
+        `;
+    }
 
     // RUOTE
     html += `<h2>📊 RUOTE AMBO FORTE</h2>`;
     html += `<div class="grid-ruote">`;
 
-    data.ruote.forEach(item => {
+    ruoteArray.forEach(item => {
         html += `
             <div class="card-ruota">
                 <div class="ruota">${item.ruota}</div>
@@ -214,7 +249,7 @@ fetch("previsioni.json")
 })
 .catch(error => {
     document.getElementById("contenuto").innerHTML =
-        "<h2>Errore caricamento previsioni.json</h2>";
+        "<h2>Errore caricamento risultati.json</h2>";
     console.error(error);
 });
 </script>
