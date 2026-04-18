@@ -6,165 +6,205 @@
 <title>LOTTO ELITE PRO</title>
 
 <style>
-* {
+body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background: #021629;
-    color: white;
+    background: #031b2f;
     font-family: Arial, sans-serif;
-    padding: 20px;
+    color: white;
     text-align: center;
 }
 
-h1 {
-    color: #00ffd0;
-    font-size: 42px;
-    margin-bottom: 10px;
+.container {
+    width: 95%;
+    max-width: 1400px;
+    margin: auto;
+    padding: 20px 0 50px;
 }
 
-.subtitle {
-    color: #00ffd0;
-    font-size: 24px;
-    margin-bottom: 35px;
-    font-weight: bold;
+h1 {
+    color: #00ffe0;
+    font-size: 52px;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
 }
 
 h2 {
-    margin: 35px 0 20px;
-    font-size: 32px;
-    color: white;
+    color: #00ffe0;
+    font-size: 30px;
+    margin-bottom: 40px;
 }
 
-.grid-top {
+.section-title {
+    font-size: 42px;
+    margin: 50px 0 25px;
+    font-weight: bold;
+}
+
+/* TOP + JOLLY */
+
+.top-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
     margin-bottom: 30px;
 }
 
-.grid-ruote {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 22px;
-}
-
-.card-top {
-    background: #2b2200;
+.top-card {
+    background: #2d2400;
     border: 3px solid #ffd700;
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 0 18px rgba(255,215,0,0.25);
+    border-radius: 24px;
+    padding: 30px 20px;
+    box-shadow: 0 0 20px rgba(255,215,0,0.25);
 }
 
-.card-jolly {
-    background: #5b0000;
+.top-card h3 {
+    font-size: 30px;
+    margin-bottom: 15px;
+}
+
+.top-card .num {
+    color: #00ffe0;
+    font-size: 44px;
+    font-weight: bold;
+}
+
+.jolly-card {
+    background: #5a0000;
     border: 3px solid red;
-    border-radius: 22px;
-    padding: 30px;
-    max-width: 700px;
-    margin: 0 auto 35px;
+    border-radius: 24px;
+    padding: 35px 20px;
+    margin-bottom: 40px;
     box-shadow: 0 0 20px rgba(255,0,0,0.25);
 }
 
-.card-ruota {
-    background: #08243b;
-    border: 3px solid #00ffd0;
-    border-radius: 20px;
-    padding: 24px;
-}
-
-.ruota {
-    font-size: 28px;
-    font-weight: bold;
-    color: #ffffff;
-    margin-bottom: 14px;
-}
-
-.ultima-label {
-    color: #cccccc;
-    font-size: 18px;
-    margin-bottom: 8px;
-}
-
-.ultima {
-    color: white;
-    font-size: 22px;
-    line-height: 1.6;
-    margin-bottom: 18px;
-}
-
-.ambo-label {
-    color: #00ffd0;
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.ambo {
-    color: #00ffd0;
+.jolly-card h3 {
     font-size: 34px;
+    margin-bottom: 15px;
+}
+
+.jolly-card .num {
+    color: #00ffe0;
+    font-size: 48px;
     font-weight: bold;
+}
+
+/* RUOTE */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 20px;
+    align-items: start;
+}
+
+.card {
+    background: #08243d;
+    border: 2px solid #00ffe0;
+    border-radius: 22px;
+    padding: 22px 18px;
+    text-align: center;
+    box-shadow: 0 0 12px rgba(0,255,224,0.18);
+    min-height: 230px;
+}
+
+.card h3 {
+    color: white;
+    font-size: 28px;
     margin-bottom: 14px;
+    font-weight: 700;
 }
 
-.score {
-    color: #ff6b6b;
-    font-size: 20px;
-    font-weight: bold;
+.card .ultima {
+    color: #d8d8d8;
+    font-size: 18px;
+    margin-bottom: 14px;
+    line-height: 1.6;
 }
 
-@media(max-width: 768px) {
+.card .label {
+    color: white;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.card .ambo {
+    color: #00ffe0;
+    font-size: 34px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.card .score {
+    color: #ff7b7b;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+    .top-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .top-grid,
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
     h1 {
-        font-size: 32px;
+        font-size: 38px;
     }
 
     h2 {
-        font-size: 26px;
-    }
-
-    .ruota {
         font-size: 24px;
     }
 
-    .ambo {
-        font-size: 28px;
-    }
-
-    .ultima {
-        font-size: 18px;
+    .section-title {
+        font-size: 32px;
     }
 }
 </style>
 </head>
 <body>
 
-<h1>🔥 LOTTO ELITE PRO</h1>
-<div class="subtitle">motore definitivo PRO</div>
+<div class="container">
 
-<div id="contenuto">
-    <h2>Caricamento risultati...</h2>
+    <h1>🔥 LOTTO ELITE PRO</h1>
+    <h2>motore definitivo PRO</h2>
+
+    <div id="app">
+        Caricamento...
+    </div>
+
 </div>
 
 <script>
 fetch("risultati.json")
-.then(response => response.json())
+.then(res => res.json())
 .then(data => {
-
     let html = "";
 
-    // TOP
-    html += `<h2>🎯 TOP</h2>`;
-    html += `<div class="grid-top">`;
+    /* TOP */
+
+    html += `<div class="section-title">🎯 TOP</div>`;
+    html += `<div class="top-grid">`;
 
     data.top.forEach(item => {
         html += `
-            <div class="card-top">
-                <div class="ruota">${item.ruota}</div>
-                <div class="ambo">
+            <div class="top-card">
+                <h3>${item.ruota}</h3>
+                <div class="num">
                     ${item.numeri[0]} — ${item.numeri[1]}
                 </div>
             </div>
@@ -173,47 +213,39 @@ fetch("risultati.json")
 
     html += `</div>`;
 
-    // JOLLY
-    html += `<h2>💣 JOLLY</h2>`;
+    /* JOLLY */
+
+    html += `<div class="section-title">💣 JOLLY</div>`;
+
     html += `
-        <div class="card-jolly">
-            <div class="ruota">
-                ${data.jolly.ruota}
-            </div>
-            <div class="ambo">
+        <div class="jolly-card">
+            <h3>${data.jolly.ruota}</h3>
+            <div class="num">
                 ${data.jolly.numeri[0]} — ${data.jolly.numeri[1]}
             </div>
         </div>
     `;
 
-    // RUOTE
-    html += `<h2>📊 RUOTE AMBO FORTE</h2>`;
-    html += `<div class="grid-ruote">`;
+    /* RUOTE */
+
+    html += `<div class="section-title">📊 RUOTE AMBO FORTE</div>`;
+    html += `<div class="grid">`;
 
     data.ruote.forEach(item => {
-
         let ultima = item.ultima_estrazione
             ? item.ultima_estrazione.join(" • ")
-            : "Non disponibile";
+            : "-";
 
         html += `
-            <div class="card-ruota">
-
-                <div class="ruota">
-                    ${item.ruota}
-                </div>
-
-                <div class="ultima-label">
-                    Ultima Estrazione
-                </div>
+            <div class="card">
+                <h3>${item.ruota}</h3>
 
                 <div class="ultima">
+                    <strong>Ultima Estrazione</strong><br><br>
                     ${ultima}
                 </div>
 
-                <div class="ambo-label">
-                    Ambo Forte
-                </div>
+                <div class="label">Ambo Forte</div>
 
                 <div class="ambo">
                     ${item.numeri[0]} — ${item.numeri[1]}
@@ -222,21 +254,18 @@ fetch("risultati.json")
                 <div class="score">
                     Score: ${item.score}
                 </div>
-
             </div>
         `;
     });
 
     html += `</div>`;
 
-    document.getElementById("contenuto").innerHTML = html;
+    document.getElementById("app").innerHTML = html;
 })
-.catch(error => {
-    console.error(error);
-
-    document.getElementById("contenuto").innerHTML = `
-        <h2>Errore caricamento risultati.json</h2>
-    `;
+.catch(err => {
+    document.getElementById("app").innerHTML =
+        "<h2>Errore caricamento risultati.json</h2>";
+    console.error(err);
 });
 </script>
 
