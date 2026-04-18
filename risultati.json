@@ -1,35 +1,35 @@
 {
   "top": [
     {
-      "ruota": "Cagliari",
-      "numeri": [
-        15,
-        25
-      ],
-      "score": 45
-    },
-    {
-      "ruota": "Palermo",
-      "numeri": [
-        64,
-        74
-      ],
-      "score": 45
-    },
-    {
       "ruota": "Bari",
       "numeri": [
         54,
         63
       ],
+      "score": 47
+    },
+    {
+      "ruota": "Roma",
+      "numeri": [
+        73,
+        82
+      ],
+      "score": 47
+    },
+    {
+      "ruota": "Cagliari",
+      "numeri": [
+        40,
+        54
+      ],
       "score": 44
     }
   ],
   "jolly": {
-    "ruota": "Cagliari",
+    "ruota": "Bari",
     "numeri": [
-      15,
-      25
+      54,
+      63
     ]
   },
   "ruote": [
@@ -39,23 +39,23 @@
         54,
         63
       ],
-      "score": 44
+      "score": 47
     },
     {
       "ruota": "Cagliari",
       "numeri": [
-        15,
-        25
+        40,
+        54
       ],
-      "score": 45
+      "score": 44
     },
     {
       "ruota": "Firenze",
       "numeri": [
-        75,
-        79
+        19,
+        26
       ],
-      "score": 40
+      "score": 44
     },
     {
       "ruota": "Genova",
@@ -63,31 +63,31 @@
         2,
         9
       ],
-      "score": 40
+      "score": 44
     },
     {
       "ruota": "Milano",
       "numeri": [
         68,
-        73
+        79
       ],
-      "score": 40
+      "score": 44
     },
     {
       "ruota": "Napoli",
       "numeri": [
-        26,
+        23,
         31
       ],
-      "score": 40
+      "score": 44
     },
     {
       "ruota": "Palermo",
       "numeri": [
-        64,
+        63,
         74
       ],
-      "score": 45
+      "score": 44
     },
     {
       "ruota": "Roma",
@@ -95,15 +95,15 @@
         73,
         82
       ],
-      "score": 44
+      "score": 47
     },
     {
       "ruota": "Torino",
       "numeri": [
         27,
-        30
+        51
       ],
-      "score": 40
+      "score": 39
     },
     {
       "ruota": "Venezia",
@@ -111,7 +111,7 @@
         15,
         21
       ],
-      "score": 40
+      "score": 44
     }
   ]
 }
