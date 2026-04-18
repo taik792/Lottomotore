@@ -1,9 +1,8 @@
 # genera_risultati.py
-# LOTTO ELITE PRO — MOTORE 5 DEFINITIVO
-# compatibile con index nuovo + risultati.json
+# MOTORE DEFINITIVO PRO
+# genera risultati.json nel formato corretto per index.html
 
 import json
-from collections import Counter
 
 RUOTE = [
     "Bari",
@@ -18,227 +17,139 @@ RUOTE = [
     "Venezia"
 ]
 
-# =========================
-# CONFIG
-# =========================
 
-TOP_COUNT = 3
-NUMERI_PER_RUOTA = 2
-
-# peso posizione estrazione
-PESI_POSIZIONE = [1.35, 1.20, 1.10, 1.00, 0.90]
-
-# bonus
-BONUS_GEMELLA = 1.15
-BONUS_VICINO_1 = 1.18
-BONUS_VICINO_2 = 1.08
+def somma_cifre(n):
+    return sum(int(x) for x in str(n))
 
 
-# =========================
-# FUNZIONI
-# =========================
-
-def normalizza(n):
-    while n < 1:
-        n += 90
-    while n > 90:
-        n -= 90
-    return n
+def numero_specchio(n):
+    if n < 10:
+        return int(f"{n}{n}")
+    s = str(n)
+    return int(s[::-1])
 
 
-def vicini(numero):
-    return [
-        normalizza(numero - 2),
-        normalizza(numero - 1),
-        numero,
-        normalizza(numero + 1),
-        normalizza(numero + 2)
-    ]
+def distanza(a, b):
+    d = abs(a - b)
+    return min(d, 90 - d)
 
 
-def gemella(numero):
-    if numero < 10:
-        return numero + 9
-
-    s = str(numero)
-
-    if len(s) == 1:
-        return numero
-
-    g = int(s[::-1])
-
-    if g < 1:
-        g = numero
-
-    if g > 90:
-        g = numero
-
-    return g
-
-
-def analizza_ruota(lista_estrazioni):
+def scegli_ambo(lista):
     """
-    esempio:
-    [
-      [12, 45, 67, 10, 90],
-      [....]
-    ]
+    prende gli ultimi 5 numeri della ruota
+    e costruisce un ambo forte semplice e stabile
     """
+    base = lista[-1]
 
-    punteggi = Counter()
+    candidati = []
 
-    # ultime 8 estrazioni = parte calda
-    ultime = lista_estrazioni[-8:]
-
-    for estrazione in ultime:
-        for idx, numero in enumerate(estrazione):
-
-            peso = PESI_POSIZIONE[idx]
-
-            # numero diretto
-            punteggi[numero] += peso
-
-            # gemella
-            g = gemella(numero)
-            punteggi[g] += peso * BONUS_GEMELLA
-
-            # vicini ±1 ±2
-            for v in vicini(numero):
-                if v == numero:
-                    continue
-
-                diff = abs(v - numero)
-
-                if diff == 1:
-                    punteggi[v] += peso * BONUS_VICINO_1
-                else:
-                    punteggi[v] += peso * BONUS_VICINO_2
-
-    migliori = [x[0] for x in punteggi.most_common(NUMERI_PER_RUOTA)]
-
-    score = round(
-        sum([x[1] for x in punteggi.most_common(5)]),
-        2
-    )
-
-    return migliori, score
-
-
-def scegli_jolly(previsioni, top_ruote):
-    """
-    jolly:
-    prende migliore ruota FUORI TOP
-    """
-
-    candidate = []
-
-    for ruota, dati in previsioni.items():
-        if ruota in top_ruote:
+    for n in lista:
+        if n == base:
             continue
 
-        candidate.append(
-            (
-                ruota,
-                dati["numeri"],
-                dati["score"]
-            )
-        )
+        score = 0
 
-    candidate.sort(
-        key=lambda x: x[2],
+        # vicinanza
+        score += (20 - min(distanza(base, n), 20))
+
+        # somma cifre simile
+        score += 10 - abs(somma_cifre(base) - somma_cifre(n))
+
+        # specchio
+        if numero_specchio(base) == n:
+            score += 20
+
+        candidati.append((score, n))
+
+    candidati.sort(reverse=True)
+
+    if not candidati:
+        return [base, (base + 9) % 90 or 90], 0
+
+    secondo = candidati[0][1]
+    score_finale = round(candidati[0][0], 2)
+
+    return [base, secondo], score_finale
+
+
+def scegli_top(previsioni_ruote):
+    """
+    prende le 3 ruote con score migliore
+    """
+    ordinati = sorted(
+        previsioni_ruote,
+        key=lambda x: x["score"],
         reverse=True
     )
 
-    if not candidate:
-        return None
+    return ordinati[:3]
 
-    ruota, numeri, _ = candidate[0]
+
+def scegli_jolly(top):
+    """
+    Jolly forte:
+    prende il miglior top
+    e usa il suo ambo invertito
+    """
+    migliore = top[0]
+
+    n1 = migliore["numeri"][0]
+    n2 = migliore["numeri"][1]
 
     return {
-        "ruota": ruota,
-        "numeri": numeri,
-        "label": f"{ruota} (jolly forte)"
+        "ruota": migliore["ruota"],
+        "numeri": [n2, n1]
     }
 
-
-# =========================
-# MAIN
-# =========================
 
 def main():
-    with open(
-        "estrazioni.json",
-        "r",
-        encoding="utf-8"
-    ) as f:
-        data = json.load(f)
+    try:
+        with open("estrazioni.json", "r", encoding="utf-8") as f:
+            estrazioni = json.load(f)
 
-    previsioni = {}
+        ruote_output = []
 
-    for ruota in RUOTE:
-        estrazioni = data.get(ruota, [])
+        for ruota in RUOTE:
+            if ruota not in estrazioni:
+                continue
 
-        if not estrazioni:
-            continue
+            storico = estrazioni[ruota]
 
-        numeri, score = analizza_ruota(estrazioni)
+            if not storico or len(storico) == 0:
+                continue
 
-        previsioni[ruota] = {
-            "numeri": numeri,
-            "score": score
+            ultima = storico[-1]
+
+            ambo, score = scegli_ambo(ultima)
+
+            ruote_output.append({
+                "ruota": ruota,
+                "numeri": ambo,
+                "score": score,
+                "ultima_estrazione": ultima
+            })
+
+        top = scegli_top(ruote_output)
+        jolly = scegli_jolly(top)
+
+        risultato_finale = {
+            "top": top,
+            "jolly": jolly,
+            "ruote": ruote_output
         }
 
-    # =========================
-    # TOP
-    # =========================
+        with open("risultati.json", "w", encoding="utf-8") as f:
+            json.dump(
+                risultato_finale,
+                f,
+                indent=2,
+                ensure_ascii=False
+            )
 
-    top = sorted(
-        previsioni.items(),
-        key=lambda x: x[1]["score"],
-        reverse=True
-    )[:TOP_COUNT]
+        print("risultati.json generato correttamente")
 
-    top_ruote = [x[0] for x in top]
-
-    # =========================
-    # JOLLY
-    # =========================
-
-    jolly = scegli_jolly(
-        previsioni,
-        top_ruote
-    )
-
-    # =========================
-    # JSON FINALE
-    # =========================
-
-    risultato_finale = {
-        "top": [],
-        "jolly": jolly,
-        "ruote": previsioni
-    }
-
-    for ruota, dati in top:
-        risultato_finale["top"].append({
-            "ruota": ruota,
-            "numeri": dati["numeri"],
-            "score": dati["score"]
-        })
-
-    with open(
-        "risultati.json",
-        "w",
-        encoding="utf-8"
-    ) as f:
-        json.dump(
-            risultato_finale,
-            f,
-            indent=2,
-            ensure_ascii=False
-        )
-
-    print("🔥 risultati.json generato correttamente")
+    except Exception as e:
+        print("ERRORE:", str(e))
 
 
 if __name__ == "__main__":
