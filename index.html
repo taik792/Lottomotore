@@ -6,176 +6,136 @@
 <title>LOTTO ELITE PRO</title>
 
 <style>
-* {
+body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background: #031b2f;
-    color: white;
+    background: #001b2e;
     font-family: Arial, sans-serif;
-    padding: 16px;
+    color: white;
+    text-align: center;
 }
 
 .container {
-    max-width: 1600px;
+    max-width: 1400px;
     margin: auto;
+    padding: 20px;
 }
 
-/* TITOLI */
-
 h1 {
-    text-align: center;
     color: #00ffe0;
-    font-size: 48px;
+    font-size: 52px;
     margin-bottom: 10px;
-    font-weight: bold;
+    letter-spacing: 2px;
 }
 
 h2 {
-    text-align: center;
     color: #00ffe0;
-    font-size: 26px;
-    margin-bottom: 35px;
+    font-size: 28px;
+    margin-bottom: 40px;
 }
 
 .section-title {
-    text-align: center;
     font-size: 34px;
+    margin: 40px 0 25px;
     font-weight: bold;
-    margin: 35px 0 20px;
-    color: white;
 }
 
-/* TOP */
-
-.top-grid {
+.grid-top {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+    gap: 18px;
+    margin-bottom: 40px;
 }
 
-.top-card {
-    background: #2a2100;
-    border: 3px solid #ffd700;
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 0 16px rgba(255,215,0,0.18);
-}
-
-.top-card h3 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.top-number {
-    color: #00ffe0;
-    font-size: 34px;
-    font-weight: bold;
-}
-
-/* JOLLY */
-
-.jolly-card {
-    margin-top: 20px;
-    background: #5b0000;
-    border: 3px solid red;
-    border-radius: 22px;
-    padding: 26px;
-    text-align: center;
-    box-shadow: 0 0 18px rgba(255,0,0,0.20);
-}
-
-.jolly-card h3 {
-    font-size: 28px;
-    margin-bottom: 12px;
-}
-
-.jolly-number {
-    color: #00ffe0;
-    font-size: 40px;
-    font-weight: bold;
-}
-
-/* RUOTE → 3 PER RIGA ANCHE SU MOBILE */
-
-.grid {
+.grid-ruote {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-top: 18px;
+    gap: 18px;
 }
 
-.card {
-    background: #08243d;
-    border: 2px solid #00ffe0;
-    border-radius: 18px;
-    padding: 16px;
-    text-align: center;
-    box-shadow: 0 0 12px rgba(0,255,224,0.15);
+.card-top {
+    background: #2d2200;
+    border: 4px solid #ffd700;
+    border-radius: 24px;
+    padding: 28px 16px;
+    box-shadow: 0 0 20px rgba(255,215,0,0.25);
 }
 
-.card h3 {
+.card-jolly {
+    background: #5a0000;
+    border: 4px solid red;
+    border-radius: 24px;
+    padding: 35px 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 0 20px rgba(255,0,0,0.25);
+}
+
+.card-ruota {
+    background: #062b45;
+    border: 3px solid #00ffe0;
+    border-radius: 24px;
+    padding: 22px 14px;
+}
+
+.ruota {
     font-size: 22px;
+    font-weight: bold;
     margin-bottom: 12px;
 }
 
-.ultima-title {
-    color: #dcdcdc;
-    font-size: 14px;
-    font-weight: bold;
+.label {
+    font-size: 16px;
+    color: #dddddd;
+    margin-top: 10px;
     margin-bottom: 8px;
 }
 
-.ultima {
-    color: white;
-    font-size: 15px;
+.estrazione {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #ffffff;
     margin-bottom: 14px;
-    line-height: 1.5;
 }
 
-.ambo-title {
-    color: #00ffe0;
-    font-size: 14px;
+.numeri {
+    font-size: 34px;
     font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.ambo {
     color: #00ffe0;
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 10px;
+    margin: 12px 0;
 }
 
 .score {
-    color: #ff7f7f;
-    font-size: 15px;
+    color: #ff8f8f;
+    font-size: 18px;
     font-weight: bold;
 }
 
-/* RESPONSIVE */
-/* SEMPRE 3 COLONNE, anche su telefono */
+.errore {
+    font-size: 42px;
+    margin-top: 80px;
+    color: white;
+}
 
-@media(max-width: 1000px) {
-    .top-grid,
-    .grid {
-        grid-template-columns: repeat(3, 1fr);
+@media (max-width: 900px) {
+    .grid-top,
+    .grid-ruote {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    h1 {
+        font-size: 42px;
     }
 }
 
-@media(max-width: 700px) {
-    .top-grid,
-    .grid {
+@media (max-width: 600px) {
+    .grid-top,
+    .grid-ruote {
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
     }
 
     h1 {
-        font-size: 34px;
+        font-size: 28px;
     }
 
     h2 {
@@ -186,56 +146,26 @@ h2 {
         font-size: 24px;
     }
 
-    .top-card {
-        padding: 14px;
+    .card-top,
+    .card-ruota {
+        padding: 14px 8px;
+        border-radius: 18px;
     }
 
-    .top-card h3 {
-        font-size: 16px;
+    .ruota {
+        font-size: 18px;
     }
 
-    .top-number {
-        font-size: 24px;
+    .numeri {
+        font-size: 22px;
     }
 
-    .jolly-card {
-        padding: 18px;
-    }
-
-    .jolly-card h3 {
-        font-size: 20px;
-    }
-
-    .jolly-number {
-        font-size: 28px;
-    }
-
-    .card {
-        padding: 10px;
-    }
-
-    .card h3 {
-        font-size: 16px;
-    }
-
-    .ultima-title {
-        font-size: 12px;
-    }
-
-    .ultima {
-        font-size: 12px;
-    }
-
-    .ambo-title {
-        font-size: 12px;
-    }
-
-    .ambo {
-        font-size: 20px;
+    .estrazione {
+        font-size: 14px;
     }
 
     .score {
-        font-size: 12px;
+        font-size: 14px;
     }
 }
 </style>
@@ -243,101 +173,109 @@ h2 {
 <body>
 
 <div class="container">
-
     <h1>🔥 LOTTO ELITE PRO</h1>
     <h2>motore definitivo PRO</h2>
 
-    <div id="app">
-        Caricamento...
+    <div id="contenuto">
+        <div class="errore">Caricamento...</div>
     </div>
-
 </div>
 
 <script>
-fetch("risultati.json")
-.then(response => response.json())
-.then(data => {
+function formatNumeri(arr) {
+    return arr.join(" — ");
+}
 
-    let html = "";
+function formatEstrazione(arr) {
+    return arr.join(" • ");
+}
 
-    /* TOP */
+async function caricaDati() {
+    try {
+        const risultatiResponse = await fetch(
+            "risultati.json?v=" + new Date().getTime()
+        );
+        const estrazioniResponse = await fetch(
+            "estrazioni.json?v=" + new Date().getTime()
+        );
 
-    html += `<div class="section-title">🎯 TOP</div>`;
-    html += `<div class="top-grid">`;
+        const risultati = await risultatiResponse.json();
+        const estrazioni = await estrazioniResponse.json();
 
-    data.top.forEach(item => {
+        let html = "";
+
+        // TOP
         html += `
-            <div class="top-card">
-                <h3>${item.ruota}</h3>
-                <div class="top-number">
-                    ${item.numeri[0]} — ${item.numeri[1]}
+            <div class="section-title">🎯 TOP</div>
+            <div class="grid-top">
+        `;
+
+        risultati.top.forEach(item => {
+            html += `
+                <div class="card-top">
+                    <div class="ruota">${item.ruota}</div>
+                    <div class="numeri">${formatNumeri(item.numeri)}</div>
                 </div>
+            `;
+        });
+
+        html += `</div>`;
+
+        // JOLLY
+        html += `
+            <div class="section-title">💣 JOLLY</div>
+            <div class="card-jolly">
+                <div class="ruota">${risultati.jolly.ruota}</div>
+                <div class="numeri">${formatNumeri(risultati.jolly.numeri)}</div>
             </div>
         `;
-    });
 
-    html += `</div>`;
-
-    /* JOLLY */
-
-    html += `<div class="section-title">💣 JOLLY</div>`;
-
-    html += `
-        <div class="jolly-card">
-            <h3>${data.jolly.ruota}</h3>
-            <div class="jolly-number">
-                ${data.jolly.numeri[0]} — ${data.jolly.numeri[1]}
-            </div>
-        </div>
-    `;
-
-    /* RUOTE */
-
-    html += `<div class="section-title">📊 RUOTE AMBO FORTE</div>`;
-    html += `<div class="grid">`;
-
-    data.ruote.forEach(item => {
-
-        let ultima = item.ultima_estrazione
-            ? item.ultima_estrazione.join(" • ")
-            : "-";
-
+        // RUOTE
         html += `
-            <div class="card">
-                <h3>${item.ruota}</h3>
+            <div class="section-title">📊 RUOTE AMBO FORTE</div>
+            <div class="grid-ruote">
+        `;
 
-                <div class="ultima-title">
-                    Ultima Estrazione
-                </div>
+        risultati.ruote.forEach(item => {
+            const storicoRuota = estrazioni[item.ruota] || [];
+            const ultima = storicoRuota[storicoRuota.length - 1] || [];
 
-                <div class="ultima">
-                    ${ultima}
-                </div>
+            html += `
+                <div class="card-ruota">
+                    <div class="ruota">${item.ruota}</div>
 
-                <div class="ambo-title">
-                    Ambo Forte
-                </div>
+                    <div class="label">Ultima Estrazione</div>
+                    <div class="estrazione">
+                        ${formatEstrazione(ultima)}
+                    </div>
 
-                <div class="ambo">
-                    ${item.numeri[0]} — ${item.numeri[1]}
-                </div>
+                    <div class="label">Ambo Forte</div>
+                    <div class="numeri">
+                        ${formatNumeri(item.numeri)}
+                    </div>
 
-                <div class="score">
-                    Score: ${item.score}
+                    <div class="score">
+                        Score: ${item.score}
+                    </div>
                 </div>
+            `;
+        });
+
+        html += `</div>`;
+
+        document.getElementById("contenuto").innerHTML = html;
+
+    } catch (e) {
+        document.getElementById("contenuto").innerHTML = `
+            <div class="errore">
+                Errore caricamento risultati.json
             </div>
         `;
-    });
+        console.error(e);
+    }
+}
 
-    html += `</div>`;
-
-    document.getElementById("app").innerHTML = html;
-})
-.catch(error => {
-    document.getElementById("app").innerHTML =
-        "<h2>Errore caricamento risultati.json</h2>";
-    console.error(error);
-});
+caricaDati();
 </script>
 
 </body>
