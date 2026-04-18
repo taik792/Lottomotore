@@ -1,9 +1,8 @@
 # genera_risultati.py
-# MOTORE DEFINITIVO PRO
-# filtro anti-ambi troppo vicini + top + jolly + ruote ambi forti
+# MOTORE DEFINITIVO PRO V2
+# anti-ambi vicini + penalità speculari + top + jolly
 
 import json
-from collections import Counter
 
 RUOTE = [
     "Bari",
@@ -18,7 +17,7 @@ RUOTE = [
     "Venezia"
 ]
 
-DISTANZA_MINIMA = 3  # evita ambi troppo vicini (es: 41-42)
+DISTANZA_MINIMA = 3
 
 
 def carica_estrazioni():
@@ -26,62 +25,61 @@ def carica_estrazioni():
         return json.load(f)
 
 
+def somma_cifre(n):
+    return sum(int(c) for c in str(n))
+
+
 def score_coppia(n1, n2, ultima):
-    """
-    Score semplice ma stabile:
-    - presenza nell'ultima estrazione
-    - distanza numerica
-    - preferenza per numeri presenti davvero nel ciclo recente
-    """
-
     score = 0
+    distanza = abs(n1 - n2)
 
+    # blocco ambi troppo vicini
+    if distanza < DISTANZA_MINIMA:
+        return -999
+
+    # presenza in ultima estrazione
     if n1 in ultima:
         score += 15
     if n2 in ultima:
         score += 15
 
-    distanza = abs(n1 - n2)
-
-    # penalità se troppo vicini
-    if distanza <= 2:
-        return -999
-
-    # premio distanza equilibrata
-    if 3 <= distanza <= 12:
-        score += 10
-    elif 13 <= distanza <= 25:
-        score += 7
+    # premio distanza ottimale
+    if 6 <= distanza <= 15:
+        score += 14
+    elif 3 <= distanza <= 5:
+        score += 8
+    elif 16 <= distanza <= 24:
+        score += 9
     else:
+        score += 4
+
+    # bonus finali uguali
+    if str(n1)[-1] == str(n2)[-1]:
+        score += 4
+
+    # bonus somma cifre uguale
+    if somma_cifre(n1) == somma_cifre(n2):
         score += 3
 
-    # bonus coppie speculari / finali simili
-    if str(n1)[-1] == str(n2)[-1]:
-        score += 5
+    # penalità schemi troppo speculari
+    if abs((n1 // 10) - (n2 // 10)) == 1 and str(n1)[-1] == str(n2)[-1]:
+        score -= 6
 
-    if sum(map(int, str(n1))) == sum(map(int, str(n2))):
-        score += 4
+    # penalità numeri consecutivi forti
+    if distanza <= 2:
+        score -= 20
 
     return round(score, 2)
 
 
-def migliore_coppia(numeri_ruota):
-    """
-    prende ultima estrazione e cerca la miglior coppia
-    evitando coppie troppo vicine
-    """
-
-    ultima = numeri_ruota[-1]
-
+def migliore_coppia(estrazioni_ruota):
+    ultima = estrazioni_ruota[-1]
     migliori = []
 
     for i in range(len(ultima)):
         for j in range(i + 1, len(ultima)):
             n1 = ultima[i]
             n2 = ultima[j]
-
-            if abs(n1 - n2) < DISTANZA_MINIMA:
-                continue
 
             score = score_coppia(n1, n2, ultima)
 
@@ -92,10 +90,9 @@ def migliore_coppia(numeri_ruota):
                 })
 
     if not migliori:
-        # fallback sicurezza
-        nums = sorted(ultima[:2])
+        fallback = sorted([ultima[0], ultima[1]])
         return {
-            "numeri": nums,
+            "numeri": fallback,
             "score": 10
         }
 
@@ -103,27 +100,17 @@ def migliore_coppia(numeri_ruota):
     return migliori[0]
 
 
-def genera_top(previsioni_ruote):
+def genera_top(previsioni):
     top = sorted(
-        previsioni_ruote,
+        previsioni,
         key=lambda x: x["score"],
         reverse=True
     )[:3]
 
-    return [
-        {
-            "ruota": x["ruota"],
-            "numeri": x["numeri"],
-            "score": x["score"]
-        }
-        for x in top
-    ]
+    return top
 
 
 def genera_jolly(top):
-    """
-    prende il TOP migliore e lo usa come JOLLY
-    """
     migliore = top[0]
 
     return {
