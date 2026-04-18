@@ -6,172 +6,176 @@
 <title>LOTTO ELITE PRO</title>
 
 <style>
-body {
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
     background: #031b2f;
-    font-family: Arial, sans-serif;
     color: white;
-    text-align: center;
+    font-family: Arial, sans-serif;
+    padding: 20px;
 }
 
 .container {
-    width: 95%;
-    max-width: 1400px;
+    max-width: 1500px;
     margin: auto;
-    padding: 20px 0 50px;
 }
 
+/* TITOLI */
+
 h1 {
+    text-align: center;
     color: #00ffe0;
     font-size: 52px;
     margin-bottom: 10px;
-    letter-spacing: 2px;
 }
 
 h2 {
+    text-align: center;
     color: #00ffe0;
-    font-size: 30px;
+    font-size: 28px;
     margin-bottom: 40px;
 }
 
 .section-title {
-    font-size: 42px;
-    margin: 50px 0 25px;
+    text-align: center;
+    font-size: 38px;
     font-weight: bold;
+    margin: 40px 0 25px;
 }
 
-/* TOP + JOLLY */
+/* TOP */
 
 .top-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    margin-bottom: 30px;
+    gap: 20px;
 }
 
 .top-card {
-    background: #2d2400;
+    background: #2a2100;
     border: 3px solid #ffd700;
     border-radius: 24px;
-    padding: 30px 20px;
-    box-shadow: 0 0 20px rgba(255,215,0,0.25);
+    padding: 28px;
+    text-align: center;
+    box-shadow: 0 0 18px rgba(255,215,0,0.20);
 }
 
 .top-card h3 {
     font-size: 30px;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
-.top-card .num {
+.top-number {
     color: #00ffe0;
-    font-size: 44px;
+    font-size: 42px;
     font-weight: bold;
 }
 
+/* JOLLY */
+
 .jolly-card {
-    background: #5a0000;
+    margin-top: 25px;
+    background: #5c0000;
     border: 3px solid red;
     border-radius: 24px;
-    padding: 35px 20px;
-    margin-bottom: 40px;
-    box-shadow: 0 0 20px rgba(255,0,0,0.25);
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255,0,0,0.20);
 }
 
 .jolly-card h3 {
     font-size: 34px;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
-.jolly-card .num {
+.jolly-number {
     color: #00ffe0;
     font-size: 48px;
     font-weight: bold;
 }
 
-/* RUOTE */
+/* RUOTE → 3 PER RIGA */
 
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 18px;
     margin-top: 20px;
-    align-items: start;
 }
 
 .card {
     background: #08243d;
     border: 2px solid #00ffe0;
     border-radius: 22px;
-    padding: 22px 18px;
+    padding: 22px;
     text-align: center;
-    box-shadow: 0 0 12px rgba(0,255,224,0.18);
-    min-height: 230px;
+    box-shadow: 0 0 14px rgba(0,255,224,0.15);
 }
 
 .card h3 {
-    color: white;
     font-size: 28px;
-    margin-bottom: 14px;
-    font-weight: 700;
+    margin-bottom: 18px;
 }
 
-.card .ultima {
-    color: #d8d8d8;
+.ultima-title {
+    color: #dcdcdc;
     font-size: 18px;
-    margin-bottom: 14px;
-    line-height: 1.6;
-}
-
-.card .label {
-    color: white;
-    font-size: 16px;
-    margin-top: 10px;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.card .ambo {
-    color: #00ffe0;
-    font-size: 34px;
-    font-weight: 800;
+    font-weight: bold;
     margin-bottom: 10px;
 }
 
-.card .score {
-    color: #ff7b7b;
+.ultima {
+    color: white;
+    font-size: 22px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.ambo-title {
+    color: #00ffe0;
     font-size: 18px;
-    font-weight: 700;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.ambo {
+    color: #00ffe0;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.score {
+    color: #ff7f7f;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 /* RESPONSIVE */
 
-@media (max-width: 900px) {
-    .top-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
+@media(max-width: 1000px) {
+    .top-grid,
     .grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 600px) {
+@media(max-width: 700px) {
     .top-grid,
     .grid {
         grid-template-columns: 1fr;
     }
 
     h1 {
-        font-size: 38px;
-    }
-
-    h2 {
-        font-size: 24px;
+        font-size: 40px;
     }
 
     .section-title {
-        font-size: 32px;
+        font-size: 30px;
     }
 }
 </style>
@@ -191,8 +195,9 @@ h2 {
 
 <script>
 fetch("risultati.json")
-.then(res => res.json())
+.then(response => response.json())
 .then(data => {
+
     let html = "";
 
     /* TOP */
@@ -204,7 +209,7 @@ fetch("risultati.json")
         html += `
             <div class="top-card">
                 <h3>${item.ruota}</h3>
-                <div class="num">
+                <div class="top-number">
                     ${item.numeri[0]} — ${item.numeri[1]}
                 </div>
             </div>
@@ -220,7 +225,7 @@ fetch("risultati.json")
     html += `
         <div class="jolly-card">
             <h3>${data.jolly.ruota}</h3>
-            <div class="num">
+            <div class="jolly-number">
                 ${data.jolly.numeri[0]} — ${data.jolly.numeri[1]}
             </div>
         </div>
@@ -232,6 +237,7 @@ fetch("risultati.json")
     html += `<div class="grid">`;
 
     data.ruote.forEach(item => {
+
         let ultima = item.ultima_estrazione
             ? item.ultima_estrazione.join(" • ")
             : "-";
@@ -240,12 +246,17 @@ fetch("risultati.json")
             <div class="card">
                 <h3>${item.ruota}</h3>
 
+                <div class="ultima-title">
+                    Ultima Estrazione
+                </div>
+
                 <div class="ultima">
-                    <strong>Ultima Estrazione</strong><br><br>
                     ${ultima}
                 </div>
 
-                <div class="label">Ambo Forte</div>
+                <div class="ambo-title">
+                    Ambo Forte
+                </div>
 
                 <div class="ambo">
                     ${item.numeri[0]} — ${item.numeri[1]}
@@ -262,10 +273,10 @@ fetch("risultati.json")
 
     document.getElementById("app").innerHTML = html;
 })
-.catch(err => {
+.catch(error => {
     document.getElementById("app").innerHTML =
         "<h2>Errore caricamento risultati.json</h2>";
-    console.error(err);
+    console.error(error);
 });
 </script>
 
