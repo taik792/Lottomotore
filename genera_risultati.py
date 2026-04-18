@@ -1,8 +1,9 @@
 # genera_risultati.py
 # MOTORE DEFINITIVO PRO
-# genera risultati.json nel formato corretto per index.html
+# filtro anti-ambi troppo vicini + top + jolly + ruote ambi forti
 
 import json
+from collections import Counter
 
 RUOTE = [
     "Bari",
@@ -17,139 +18,155 @@ RUOTE = [
     "Venezia"
 ]
 
-
-def somma_cifre(n):
-    return sum(int(x) for x in str(n))
+DISTANZA_MINIMA = 3  # evita ambi troppo vicini (es: 41-42)
 
 
-def numero_specchio(n):
-    if n < 10:
-        return int(f"{n}{n}")
-    s = str(n)
-    return int(s[::-1])
+def carica_estrazioni():
+    with open("estrazioni.json", "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
-def distanza(a, b):
-    d = abs(a - b)
-    return min(d, 90 - d)
-
-
-def scegli_ambo(lista):
+def score_coppia(n1, n2, ultima):
     """
-    prende gli ultimi 5 numeri della ruota
-    e costruisce un ambo forte semplice e stabile
+    Score semplice ma stabile:
+    - presenza nell'ultima estrazione
+    - distanza numerica
+    - preferenza per numeri presenti davvero nel ciclo recente
     """
-    base = lista[-1]
 
-    candidati = []
+    score = 0
 
-    for n in lista:
-        if n == base:
-            continue
+    if n1 in ultima:
+        score += 15
+    if n2 in ultima:
+        score += 15
 
-        score = 0
+    distanza = abs(n1 - n2)
 
-        # vicinanza
-        score += (20 - min(distanza(base, n), 20))
+    # penalità se troppo vicini
+    if distanza <= 2:
+        return -999
 
-        # somma cifre simile
-        score += 10 - abs(somma_cifre(base) - somma_cifre(n))
+    # premio distanza equilibrata
+    if 3 <= distanza <= 12:
+        score += 10
+    elif 13 <= distanza <= 25:
+        score += 7
+    else:
+        score += 3
 
-        # specchio
-        if numero_specchio(base) == n:
-            score += 20
+    # bonus coppie speculari / finali simili
+    if str(n1)[-1] == str(n2)[-1]:
+        score += 5
 
-        candidati.append((score, n))
+    if sum(map(int, str(n1))) == sum(map(int, str(n2))):
+        score += 4
 
-    candidati.sort(reverse=True)
-
-    if not candidati:
-        return [base, (base + 9) % 90 or 90], 0
-
-    secondo = candidati[0][1]
-    score_finale = round(candidati[0][0], 2)
-
-    return [base, secondo], score_finale
+    return round(score, 2)
 
 
-def scegli_top(previsioni_ruote):
+def migliore_coppia(numeri_ruota):
     """
-    prende le 3 ruote con score migliore
+    prende ultima estrazione e cerca la miglior coppia
+    evitando coppie troppo vicine
     """
-    ordinati = sorted(
+
+    ultima = numeri_ruota[-1]
+
+    migliori = []
+
+    for i in range(len(ultima)):
+        for j in range(i + 1, len(ultima)):
+            n1 = ultima[i]
+            n2 = ultima[j]
+
+            if abs(n1 - n2) < DISTANZA_MINIMA:
+                continue
+
+            score = score_coppia(n1, n2, ultima)
+
+            if score > 0:
+                migliori.append({
+                    "numeri": sorted([n1, n2]),
+                    "score": score
+                })
+
+    if not migliori:
+        # fallback sicurezza
+        nums = sorted(ultima[:2])
+        return {
+            "numeri": nums,
+            "score": 10
+        }
+
+    migliori.sort(key=lambda x: x["score"], reverse=True)
+    return migliori[0]
+
+
+def genera_top(previsioni_ruote):
+    top = sorted(
         previsioni_ruote,
         key=lambda x: x["score"],
         reverse=True
-    )
+    )[:3]
 
-    return ordinati[:3]
+    return [
+        {
+            "ruota": x["ruota"],
+            "numeri": x["numeri"],
+            "score": x["score"]
+        }
+        for x in top
+    ]
 
 
-def scegli_jolly(top):
+def genera_jolly(top):
     """
-    Jolly forte:
-    prende il miglior top
-    e usa il suo ambo invertito
+    prende il TOP migliore e lo usa come JOLLY
     """
     migliore = top[0]
 
-    n1 = migliore["numeri"][0]
-    n2 = migliore["numeri"][1]
-
     return {
         "ruota": migliore["ruota"],
-        "numeri": [n2, n1]
+        "numeri": migliore["numeri"]
     }
 
 
 def main():
-    try:
-        with open("estrazioni.json", "r", encoding="utf-8") as f:
-            estrazioni = json.load(f)
+    dati = carica_estrazioni()
 
-        ruote_output = []
+    ruote_output = []
 
-        for ruota in RUOTE:
-            if ruota not in estrazioni:
-                continue
+    for ruota in RUOTE:
+        if ruota not in dati:
+            continue
 
-            storico = estrazioni[ruota]
+        miglior = migliore_coppia(dati[ruota])
 
-            if not storico or len(storico) == 0:
-                continue
+        ruote_output.append({
+            "ruota": ruota,
+            "numeri": miglior["numeri"],
+            "score": miglior["score"]
+        })
 
-            ultima = storico[-1]
+    top = genera_top(ruote_output)
+    jolly = genera_jolly(top)
 
-            ambo, score = scegli_ambo(ultima)
+    risultati = {
+        "top": top,
+        "jolly": jolly,
+        "ruote": ruote_output
+    }
 
-            ruote_output.append({
-                "ruota": ruota,
-                "numeri": ambo,
-                "score": score,
-                "ultima_estrazione": ultima
-            })
+    with open("risultati.json", "w", encoding="utf-8") as f:
+        json.dump(
+            risultati,
+            f,
+            indent=2,
+            ensure_ascii=False
+        )
 
-        top = scegli_top(ruote_output)
-        jolly = scegli_jolly(top)
-
-        risultato_finale = {
-            "top": top,
-            "jolly": jolly,
-            "ruote": ruote_output
-        }
-
-        with open("risultati.json", "w", encoding="utf-8") as f:
-            json.dump(
-                risultato_finale,
-                f,
-                indent=2,
-                ensure_ascii=False
-            )
-
-        print("risultati.json generato correttamente")
-
-    except Exception as e:
-        print("ERRORE:", str(e))
+    print("risultati.json aggiornato correttamente")
 
 
 if __name__ == "__main__":
