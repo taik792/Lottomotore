@@ -16,11 +16,11 @@ body {
     background: #031b2f;
     color: white;
     font-family: Arial, sans-serif;
-    padding: 20px;
+    padding: 16px;
 }
 
 .container {
-    max-width: 1500px;
+    max-width: 1600px;
     margin: auto;
 }
 
@@ -29,22 +29,24 @@ body {
 h1 {
     text-align: center;
     color: #00ffe0;
-    font-size: 52px;
+    font-size: 48px;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
 h2 {
     text-align: center;
     color: #00ffe0;
-    font-size: 28px;
-    margin-bottom: 40px;
+    font-size: 26px;
+    margin-bottom: 35px;
 }
 
 .section-title {
     text-align: center;
-    font-size: 38px;
+    font-size: 34px;
     font-weight: bold;
-    margin: 40px 0 25px;
+    margin: 35px 0 20px;
+    color: white;
 }
 
 /* TOP */
@@ -52,130 +54,188 @@ h2 {
 .top-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 14px;
 }
 
 .top-card {
     background: #2a2100;
     border: 3px solid #ffd700;
-    border-radius: 24px;
-    padding: 28px;
+    border-radius: 20px;
+    padding: 20px;
     text-align: center;
-    box-shadow: 0 0 18px rgba(255,215,0,0.20);
+    box-shadow: 0 0 16px rgba(255,215,0,0.18);
 }
 
 .top-card h3 {
-    font-size: 30px;
-    margin-bottom: 12px;
+    font-size: 24px;
+    margin-bottom: 10px;
 }
 
 .top-number {
     color: #00ffe0;
-    font-size: 42px;
+    font-size: 34px;
     font-weight: bold;
 }
 
 /* JOLLY */
 
 .jolly-card {
-    margin-top: 25px;
-    background: #5c0000;
+    margin-top: 20px;
+    background: #5b0000;
     border: 3px solid red;
-    border-radius: 24px;
-    padding: 35px;
+    border-radius: 22px;
+    padding: 26px;
     text-align: center;
-    box-shadow: 0 0 20px rgba(255,0,0,0.20);
+    box-shadow: 0 0 18px rgba(255,0,0,0.20);
 }
 
 .jolly-card h3 {
-    font-size: 34px;
-    margin-bottom: 14px;
+    font-size: 28px;
+    margin-bottom: 12px;
 }
 
 .jolly-number {
     color: #00ffe0;
-    font-size: 48px;
+    font-size: 40px;
     font-weight: bold;
 }
 
-/* RUOTE → 3 PER RIGA */
+/* RUOTE → 3 PER RIGA ANCHE SU MOBILE */
 
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    margin-top: 20px;
+    gap: 14px;
+    margin-top: 18px;
 }
 
 .card {
     background: #08243d;
     border: 2px solid #00ffe0;
-    border-radius: 22px;
-    padding: 22px;
+    border-radius: 18px;
+    padding: 16px;
     text-align: center;
-    box-shadow: 0 0 14px rgba(0,255,224,0.15);
+    box-shadow: 0 0 12px rgba(0,255,224,0.15);
 }
 
 .card h3 {
-    font-size: 28px;
-    margin-bottom: 18px;
+    font-size: 22px;
+    margin-bottom: 12px;
 }
 
 .ultima-title {
     color: #dcdcdc;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .ultima {
     color: white;
-    font-size: 22px;
-    margin-bottom: 20px;
+    font-size: 15px;
+    margin-bottom: 14px;
     line-height: 1.5;
 }
 
 .ambo-title {
     color: #00ffe0;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .ambo {
     color: #00ffe0;
-    font-size: 36px;
+    font-size: 28px;
     font-weight: bold;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .score {
     color: #ff7f7f;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold;
 }
 
 /* RESPONSIVE */
+/* SEMPRE 3 COLONNE, anche su telefono */
 
 @media(max-width: 1000px) {
     .top-grid,
     .grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media(max-width: 700px) {
     .top-grid,
     .grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
     }
 
     h1 {
-        font-size: 40px;
+        font-size: 34px;
+    }
+
+    h2 {
+        font-size: 20px;
     }
 
     .section-title {
-        font-size: 30px;
+        font-size: 24px;
+    }
+
+    .top-card {
+        padding: 14px;
+    }
+
+    .top-card h3 {
+        font-size: 16px;
+    }
+
+    .top-number {
+        font-size: 24px;
+    }
+
+    .jolly-card {
+        padding: 18px;
+    }
+
+    .jolly-card h3 {
+        font-size: 20px;
+    }
+
+    .jolly-number {
+        font-size: 28px;
+    }
+
+    .card {
+        padding: 10px;
+    }
+
+    .card h3 {
+        font-size: 16px;
+    }
+
+    .ultima-title {
+        font-size: 12px;
+    }
+
+    .ultima {
+        font-size: 12px;
+    }
+
+    .ambo-title {
+        font-size: 12px;
+    }
+
+    .ambo {
+        font-size: 20px;
+    }
+
+    .score {
+        font-size: 12px;
     }
 }
 </style>
