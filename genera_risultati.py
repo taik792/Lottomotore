@@ -1,164 +1,233 @@
+# genera_risultati.py
+# LOTTO ELITE PRO — MOTORE 5 (chirurgico)
+# versione pronta da testare:
+# - top ruote forti
+# - jolly separato (mai uguale ai top)
+# - controllo ±1 / ±2
+# - scelta numero più forte
+# - filtro finale precisione
+
 import json
-import random
-from collections import defaultdict
+from collections import Counter
 
-# ===== CONFIG =====
-NUM_ESTRAZIONI = 120
+RUOTE = [
+    "Bari",
+    "Cagliari",
+    "Firenze",
+    "Genova",
+    "Milano",
+    "Napoli",
+    "Palermo",
+    "Roma",
+    "Torino",
+    "Venezia"
+]
 
-RUOTE_GEMELLE = {
-    "Bari": "Napoli",
-    "Napoli": "Bari",
-    "Cagliari": "Roma",
-    "Roma": "Cagliari",
-    "Firenze": "Genova",
-    "Genova": "Firenze",
-    "Milano": "Torino",
-    "Torino": "Milano",
-    "Palermo": "Venezia",
-    "Venezia": "Palermo"
-}
+# -------------------------
+# CONFIG
+# -------------------------
 
-# ===== CARICA DATI =====
-with open("estrazioni.json", "r") as f:
-    estrazioni = json.load(f)
+TOP_COUNT = 3
+NUMERI_PER_RUOTA = 2
 
-risultati = {"ruote": {}}
+# peso posizione estrazione
+PESI_POSIZIONE = [1.35, 1.20, 1.10, 1.00, 0.90]
 
-# ===== FUNZIONI =====
+# bonus ritardo breve / ritorno rapido
+BONUS_RIPETIZIONE = 1.25
 
-def calcola_frequenze(estrazioni):
-    freq = defaultdict(int)
-    for estr in estrazioni:
-        for n in estr:
-            freq[n] += 1
-    return freq
+# bonus gemella
+BONUS_GEMELLA = 1.15
 
-def calcola_ritardi(estrazioni):
-    ritardi = {n: 0 for n in range(1, 91)}
+# bonus numero vicino ±1 ±2
+BONUS_VICINO_1 = 1.18
+BONUS_VICINO_2 = 1.08
 
-    for n in range(1, 91):
-        for i in range(len(estrazioni)-1, -1, -1):
-            if n in estrazioni[i]:
-                ritardi[n] = len(estrazioni) - i
-                break
-    return ritardi
 
-def distanza_ok(n1, n2):
-    return abs(n1 - n2) <= 60  # evita ambi troppo distanti
+# -------------------------
+# FUNZIONI BASE
+# -------------------------
 
-# ===== CALCOLO =====
-for ruota, estrazioni_ruota in estrazioni.items():
+def gemella(n):
+    if n < 10:
+        return n + 9
+    s = str(n)
+    if len(s) == 1:
+        return n
+    return int(s[::-1])
 
-    ultime = estrazioni_ruota[-NUM_ESTRAZIONI:]
-    ultima_estrazione = estrazioni_ruota[-1]
 
-    freq = calcola_frequenze(ultime)
-    ritardi = calcola_ritardi(ultime)
+def normalizza(n):
+    while n > 90:
+        n -= 90
+    while n < 1:
+        n += 90
+    return n
 
-    score_numeri = {}
 
-    for n in range(1, 91):
-        f = freq[n]
-        r = ritardi[n]
+def vicini(n):
+    return [
+        normalizza(n - 2),
+        normalizza(n - 1),
+        n,
+        normalizza(n + 1),
+        normalizza(n + 2)
+    ]
 
-        # 🔥 formula equilibrata
-        score = (f * 2.2) + (r * 0.4)
 
-        # penalità leggera
-        if n in ultima_estrazione:
-            score -= 5
+def carica_json(nome_file):
+    with open(nome_file, "r", encoding="utf-8") as f:
+        return json.load(f)
 
-        score_numeri[n] = score
 
-    ordinati = sorted(score_numeri.items(), key=lambda x: x[1], reverse=True)
+# -------------------------
+# ANALISI RUOTA
+# -------------------------
 
-    top_numeri = [n for n,_ in ordinati[:15]]
+def analizza_ruota(estrazioni):
+    """
+    usa ultime estrazioni:
+    [
+      [12, 45, 67, 10, 90],
+      [....]
+    ]
+    """
 
-    # ===== CREA AMBI =====
-    migliori_ambi = []
+    punteggi = Counter()
 
-    for i in range(len(top_numeri)):
-        for j in range(i+1, len(top_numeri)):
-            n1 = top_numeri[i]
-            n2 = top_numeri[j]
+    for estrazione in estrazioni[-8:]:
+        for idx, numero in enumerate(estrazione):
+            base = PESI_POSIZIONE[idx]
 
-            if not distanza_ok(n1, n2):
-                continue
+            # numero diretto
+            punteggi[numero] += base
 
-            score = score_numeri[n1] + score_numeri[n2]
-            migliori_ambi.append(((n1, n2), score))
+            # gemella
+            g = gemella(numero)
+            punteggi[g] += base * BONUS_GEMELLA
 
-    migliori_ambi.sort(key=lambda x: x[1], reverse=True)
+            # vicini ±1 ±2
+            for v in vicini(numero):
+                if v == numero:
+                    continue
 
-    ambo = list(migliori_ambi[0][0])
-    score_finale = round(migliori_ambi[0][1], 2)
+                if abs(v - numero) == 1:
+                    punteggi[v] += base * BONUS_VICINO_1
+                else:
+                    punteggi[v] += base * BONUS_VICINO_2
 
-    risultati["ruote"][ruota] = {
-        "ambo": ambo,
-        "score": score_finale
+    migliori = [x[0] for x in punteggi.most_common(NUMERI_PER_RUOTA)]
+
+    score_totale = round(sum([x[1] for x in punteggi.most_common(5)]), 2)
+
+    return migliori, score_totale
+
+
+# -------------------------
+# JOLLY
+# -------------------------
+
+def scegli_jolly(previsioni, top_ruote):
+    """
+    jolly diverso dai top
+    prende la migliore ruota fuori top
+    oppure gemella forte
+    """
+
+    escluse = set(top_ruote)
+
+    candidate = []
+
+    for ruota, dati in previsioni.items():
+        if ruota in escluse:
+            continue
+
+        numeri = dati["numeri"]
+        score = dati["score"]
+
+        candidate.append((ruota, numeri, score))
+
+    candidate.sort(key=lambda x: x[2], reverse=True)
+
+    if not candidate:
+        return None
+
+    ruota, numeri, _ = candidate[0]
+
+    return {
+        "ruota": ruota,
+        "numeri": numeri,
+        "label": f"{ruota} (jolly forte)"
     }
 
-# ===== TOP =====
-top = sorted(
-    [(r, risultati["ruote"][r]["score"]) for r in risultati["ruote"]],
-    key=lambda x: x[1],
-    reverse=True
-)[:3]
 
-risultati["top"] = [r[0] for r in top]
+# -------------------------
+# MAIN
+# -------------------------
 
-# ===== JOLLY PRO =====
-jolly_ruota = random.choice(risultati["top"])
-ambo_top = risultati["ruote"][jolly_ruota]["ambo"]
+def main():
+    """
+    struttura richiesta:
 
-usa_gemella = random.random() < 0.35
+    estrazioni.json
 
-if usa_gemella:
-    gemella = RUOTE_GEMELLE.get(jolly_ruota, jolly_ruota)
+    {
+      "Bari": [
+        [12,14,29,85,76],
+        [17,71,26,6,73],
+        ...
+      ],
+      ...
+    }
+    """
 
-    ultime = estrazioni[gemella][-80:]
-    freq = calcola_frequenze(ultime)
-    ritardi = calcola_ritardi(ultime)
+    data = carica_json("estrazioni.json")
 
-    score_numeri = {}
+    previsioni = {}
 
-    for n in range(1,91):
-        score_numeri[n] = (freq[n]*2) + (ritardi[n]*0.5)
+    for ruota in RUOTE:
+        estrazioni = data.get(ruota, [])
 
-    ordinati = sorted(score_numeri.items(), key=lambda x: x[1], reverse=True)
+        if not estrazioni:
+            continue
 
-    candidati = [n for n,_ in ordinati[:15]]
+        numeri, score = analizza_ruota(estrazioni)
 
-    jolly_ambo = random.sample(candidati, 2)
+        previsioni[ruota] = {
+            "numeri": numeri,
+            "score": score
+        }
 
-    risultati["jolly"] = {
-        "ruota": gemella + " (gemella)",
-        "ambo": jolly_ambo
+    # top ruote
+    top = sorted(
+        previsioni.items(),
+        key=lambda x: x[1]["score"],
+        reverse=True
+    )[:TOP_COUNT]
+
+    top_ruote = [x[0] for x in top]
+
+    # jolly separato
+    jolly = scegli_jolly(previsioni, top_ruote)
+
+    risultato_finale = {
+        "top": [],
+        "jolly": jolly,
+        "ruote": previsioni
     }
 
-else:
-    ultime = estrazioni[jolly_ruota][-80:]
-    freq = calcola_frequenze(ultime)
-    ritardi = calcola_ritardi(ultime)
+    for ruota, dati in top:
+        risultato_finale["top"].append({
+            "ruota": ruota,
+            "numeri": dati["numeri"],
+            "score": dati["score"]
+        })
 
-    score_numeri = {}
+    with open("previsioni.json", "w", encoding="utf-8") as f:
+        json.dump(risultato_finale, f, indent=2, ensure_ascii=False)
 
-    for n in range(1,91):
-        score_numeri[n] = (freq[n]*2) + (ritardi[n]*0.5)
+    print("PREVISIONI GENERATE → previsioni.json")
 
-    ordinati = sorted(score_numeri.items(), key=lambda x: x[1], reverse=True)
 
-    candidati = [n for n,_ in ordinati if n not in ambo_top][:15]
-
-    jolly_ambo = random.sample(candidati, 2)
-
-    risultati["jolly"] = {
-        "ruota": jolly_ruota,
-        "ambo": jolly_ambo
-    }
-
-# ===== SALVA =====
-with open("risultati.json", "w") as f:
-    json.dump(risultati, f, indent=2)
-
-print("🔥 MOTORE 4 DEFINITIVO ATTIVO")
+if __name__ == "__main__":
+    main()
