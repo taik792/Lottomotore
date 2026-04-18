@@ -1,11 +1,6 @@
 # genera_risultati.py
-# LOTTO ELITE PRO — MOTORE 5 (chirurgico)
-# versione pronta da testare:
-# - top ruote forti
-# - jolly separato (mai uguale ai top)
-# - controllo ±1 / ±2
-# - scelta numero più forte
-# - filtro finale precisione
+# LOTTO ELITE PRO — MOTORE 5 DEFINITIVO
+# compatibile con index nuovo + risultati.json
 
 import json
 from collections import Counter
@@ -23,9 +18,9 @@ RUOTE = [
     "Venezia"
 ]
 
-# -------------------------
+# =========================
 # CONFIG
-# -------------------------
+# =========================
 
 TOP_COUNT = 3
 NUMERI_PER_RUOTA = 2
@@ -33,60 +28,57 @@ NUMERI_PER_RUOTA = 2
 # peso posizione estrazione
 PESI_POSIZIONE = [1.35, 1.20, 1.10, 1.00, 0.90]
 
-# bonus ritardo breve / ritorno rapido
-BONUS_RIPETIZIONE = 1.25
-
-# bonus gemella
+# bonus
 BONUS_GEMELLA = 1.15
-
-# bonus numero vicino ±1 ±2
 BONUS_VICINO_1 = 1.18
 BONUS_VICINO_2 = 1.08
 
 
-# -------------------------
-# FUNZIONI BASE
-# -------------------------
-
-def gemella(n):
-    if n < 10:
-        return n + 9
-    s = str(n)
-    if len(s) == 1:
-        return n
-    return int(s[::-1])
-
+# =========================
+# FUNZIONI
+# =========================
 
 def normalizza(n):
-    while n > 90:
-        n -= 90
     while n < 1:
         n += 90
+    while n > 90:
+        n -= 90
     return n
 
 
-def vicini(n):
+def vicini(numero):
     return [
-        normalizza(n - 2),
-        normalizza(n - 1),
-        n,
-        normalizza(n + 1),
-        normalizza(n + 2)
+        normalizza(numero - 2),
+        normalizza(numero - 1),
+        numero,
+        normalizza(numero + 1),
+        normalizza(numero + 2)
     ]
 
 
-def carica_json(nome_file):
-    with open(nome_file, "r", encoding="utf-8") as f:
-        return json.load(f)
+def gemella(numero):
+    if numero < 10:
+        return numero + 9
+
+    s = str(numero)
+
+    if len(s) == 1:
+        return numero
+
+    g = int(s[::-1])
+
+    if g < 1:
+        g = numero
+
+    if g > 90:
+        g = numero
+
+    return g
 
 
-# -------------------------
-# ANALISI RUOTA
-# -------------------------
-
-def analizza_ruota(estrazioni):
+def analizza_ruota(lista_estrazioni):
     """
-    usa ultime estrazioni:
+    esempio:
     [
       [12, 45, 67, 10, 90],
       [....]
@@ -95,59 +87,67 @@ def analizza_ruota(estrazioni):
 
     punteggi = Counter()
 
-    for estrazione in estrazioni[-8:]:
+    # ultime 8 estrazioni = parte calda
+    ultime = lista_estrazioni[-8:]
+
+    for estrazione in ultime:
         for idx, numero in enumerate(estrazione):
-            base = PESI_POSIZIONE[idx]
+
+            peso = PESI_POSIZIONE[idx]
 
             # numero diretto
-            punteggi[numero] += base
+            punteggi[numero] += peso
 
             # gemella
             g = gemella(numero)
-            punteggi[g] += base * BONUS_GEMELLA
+            punteggi[g] += peso * BONUS_GEMELLA
 
             # vicini ±1 ±2
             for v in vicini(numero):
                 if v == numero:
                     continue
 
-                if abs(v - numero) == 1:
-                    punteggi[v] += base * BONUS_VICINO_1
+                diff = abs(v - numero)
+
+                if diff == 1:
+                    punteggi[v] += peso * BONUS_VICINO_1
                 else:
-                    punteggi[v] += base * BONUS_VICINO_2
+                    punteggi[v] += peso * BONUS_VICINO_2
 
     migliori = [x[0] for x in punteggi.most_common(NUMERI_PER_RUOTA)]
 
-    score_totale = round(sum([x[1] for x in punteggi.most_common(5)]), 2)
+    score = round(
+        sum([x[1] for x in punteggi.most_common(5)]),
+        2
+    )
 
-    return migliori, score_totale
+    return migliori, score
 
-
-# -------------------------
-# JOLLY
-# -------------------------
 
 def scegli_jolly(previsioni, top_ruote):
     """
-    jolly diverso dai top
-    prende la migliore ruota fuori top
-    oppure gemella forte
+    jolly:
+    prende migliore ruota FUORI TOP
     """
-
-    escluse = set(top_ruote)
 
     candidate = []
 
     for ruota, dati in previsioni.items():
-        if ruota in escluse:
+        if ruota in top_ruote:
             continue
 
-        numeri = dati["numeri"]
-        score = dati["score"]
+        candidate.append(
+            (
+                ruota,
+                dati["numeri"],
+                dati["score"]
+            )
+        )
 
-        candidate.append((ruota, numeri, score))
-
-    candidate.sort(key=lambda x: x[2], reverse=True)
+    candidate.sort(
+        key=lambda x: x[2],
+        reverse=True
+    )
 
     if not candidate:
         return None
@@ -161,27 +161,17 @@ def scegli_jolly(previsioni, top_ruote):
     }
 
 
-# -------------------------
+# =========================
 # MAIN
-# -------------------------
+# =========================
 
 def main():
-    """
-    struttura richiesta:
-
-    estrazioni.json
-
-    {
-      "Bari": [
-        [12,14,29,85,76],
-        [17,71,26,6,73],
-        ...
-      ],
-      ...
-    }
-    """
-
-    data = carica_json("estrazioni.json")
+    with open(
+        "estrazioni.json",
+        "r",
+        encoding="utf-8"
+    ) as f:
+        data = json.load(f)
 
     previsioni = {}
 
@@ -198,7 +188,10 @@ def main():
             "score": score
         }
 
-    # top ruote
+    # =========================
+    # TOP
+    # =========================
+
     top = sorted(
         previsioni.items(),
         key=lambda x: x[1]["score"],
@@ -207,8 +200,18 @@ def main():
 
     top_ruote = [x[0] for x in top]
 
-    # jolly separato
-    jolly = scegli_jolly(previsioni, top_ruote)
+    # =========================
+    # JOLLY
+    # =========================
+
+    jolly = scegli_jolly(
+        previsioni,
+        top_ruote
+    )
+
+    # =========================
+    # JSON FINALE
+    # =========================
 
     risultato_finale = {
         "top": [],
@@ -223,10 +226,19 @@ def main():
             "score": dati["score"]
         })
 
-    with open("previsioni.json", "w", encoding="utf-8") as f:
-        json.dump(risultato_finale, f, indent=2, ensure_ascii=False)
+    with open(
+        "risultati.json",
+        "w",
+        encoding="utf-8"
+    ) as f:
+        json.dump(
+            risultato_finale,
+            f,
+            indent=2,
+            ensure_ascii=False
+        )
 
-    print("PREVISIONI GENERATE → previsioni.json")
+    print("🔥 risultati.json generato correttamente")
 
 
 if __name__ == "__main__":
