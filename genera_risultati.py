@@ -11,45 +11,36 @@ def distanza(a, b):
     return min(d, 90 - d)
 
 
-def genera_previsione(lista_estrazioni):
-    """
-    lista_estrazioni esempio:
-    [
-        [12, 45, 67, 8, 90],
-        [4, 17, 33, 51, 72]
-    ]
-    """
+def flatten(lista):
+    out = []
+    for estrazione in lista:
+        out.extend(estrazione)
+    return out
 
-    if not lista_estrazioni:
+
+def genera_previsione(estrazioni_ruota):
+    if not estrazioni_ruota:
         return {
             "numeri": [7, 29],
             "score": 0,
             "ultima_estrazione": []
         }
 
-    ultima_estrazione = lista_estrazioni[-1]
+    ultima = estrazioni_ruota[-1]
 
-    storico = []
-    for estrazione in lista_estrazioni[:-1]:
-        storico.extend(estrazione)
+    # storico senza ultima estrazione
+    storico = estrazioni_ruota[:-1]
 
-    if len(storico) < 2:
-        storico = []
-        for estrazione in lista_estrazioni:
-            storico.extend(estrazione)
+    if not storico:
+        storico = estrazioni_ruota
 
-    freq = Counter(storico)
+    numeri_storici = flatten(storico)
+
+    freq = Counter(numeri_storici)
 
     candidati = []
 
     numeri = list(freq.keys())
-
-    if len(numeri) < 2:
-        return {
-            "numeri": [7, 29],
-            "score": 0,
-            "ultima_estrazione": ultima_estrazione
-        }
 
     for i in range(len(numeri)):
         for j in range(i + 1, len(numeri)):
@@ -61,13 +52,13 @@ def genera_previsione(lista_estrazioni):
                 continue
 
             # evita copia identica ultima estrazione
-            if n1 in ultima_estrazione and n2 in ultima_estrazione:
+            if n1 in ultima and n2 in ultima:
                 continue
 
             score = (
-                freq[n1] * 2
-                + freq[n2] * 2
-                + distanza(n1, n2)
+                freq[n1] * 3 +
+                freq[n2] * 3 +
+                distanza(n1, n2)
             )
 
             candidati.append({
@@ -79,7 +70,7 @@ def genera_previsione(lista_estrazioni):
         return {
             "numeri": [7, 29],
             "score": 0,
-            "ultima_estrazione": ultima_estrazione
+            "ultima_estrazione": ultima
         }
 
     candidati.sort(
@@ -92,7 +83,7 @@ def genera_previsione(lista_estrazioni):
     return {
         "numeri": migliore["numeri"],
         "score": migliore["score"],
-        "ultima_estrazione": ultima_estrazione
+        "ultima_estrazione": ultima
     }
 
 
@@ -100,36 +91,44 @@ def main():
     with open(FILE_INPUT, "r", encoding="utf-8") as f:
         estrazioni = json.load(f)
 
-    risultati = []
+    risultati_completi = []
 
-    for ruota, lista in estrazioni.items():
-        previsione = genera_previsione(lista)
+    # prende TUTTE le ruote presenti nel file
+    for ruota in estrazioni:
+        previsione = genera_previsione(estrazioni[ruota])
 
-        risultati.append({
+        risultati_completi.append({
             "ruota": ruota,
             "numeri": previsione["numeri"],
             "score": previsione["score"],
             "ultima_estrazione": previsione["ultima_estrazione"]
         })
 
-    risultati.sort(
+    # ordina dal migliore al peggiore
+    risultati_completi.sort(
         key=lambda x: x["score"],
         reverse=True
     )
 
-    top = risultati[:3]
-    jolly = top[0] if top else {}
+    top3 = risultati_completi[:3]
+
+    jolly = top3[0] if top3 else {}
 
     output = {
-        "top": top,
+        "top": top3,
         "jolly": jolly,
-        "ruote": risultati
+        "ruote": risultati_completi
     }
 
     with open(FILE_OUTPUT, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=4, ensure_ascii=False)
+        json.dump(
+            output,
+            f,
+            indent=4,
+            ensure_ascii=False
+        )
 
-    print("risultati.json aggiornato con tutte le ruote")
+    print("risultati.json aggiornato con TUTTE le ruote")
 
 
 if __name__ == "__main__":
