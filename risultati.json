@@ -6,7 +6,7 @@
                 45,
                 80
             ],
-            "score": 1045,
+            "score": 1550,
             "ultima_estrazione": [
                 69,
                 24,
@@ -21,7 +21,7 @@
                 42,
                 85
             ],
-            "score": 1035,
+            "score": 1531,
             "ultima_estrazione": [
                 5,
                 15,
@@ -36,7 +36,7 @@
                 1,
                 56
             ],
-            "score": 1031,
+            "score": 1529,
             "ultima_estrazione": [
                 20,
                 58,
@@ -52,7 +52,7 @@
             45,
             80
         ],
-        "score": 1045,
+        "score": 1550,
         "ultima_estrazione": [
             69,
             24,
@@ -68,7 +68,7 @@
                 45,
                 80
             ],
-            "score": 1045,
+            "score": 1550,
             "ultima_estrazione": [
                 69,
                 24,
@@ -83,7 +83,7 @@
                 42,
                 85
             ],
-            "score": 1035,
+            "score": 1531,
             "ultima_estrazione": [
                 5,
                 15,
@@ -98,7 +98,7 @@
                 1,
                 56
             ],
-            "score": 1031,
+            "score": 1529,
             "ultima_estrazione": [
                 20,
                 58,
@@ -113,7 +113,7 @@
                 18,
                 53
             ],
-            "score": 1031,
+            "score": 1529,
             "ultima_estrazione": [
                 1,
                 32,
@@ -123,27 +123,12 @@
             ]
         },
         {
-            "ruota": "Roma",
-            "numeri": [
-                6,
-                45
-            ],
-            "score": 1023,
-            "ultima_estrazione": [
-                56,
-                71,
-                6,
-                31,
-                49
-            ]
-        },
-        {
             "ruota": "Firenze",
             "numeri": [
                 44,
                 73
             ],
-            "score": 1021,
+            "score": 1517,
             "ultima_estrazione": [
                 37,
                 23,
@@ -153,12 +138,27 @@
             ]
         },
         {
+            "ruota": "Roma",
+            "numeri": [
+                6,
+                45
+            ],
+            "score": 1515,
+            "ultima_estrazione": [
+                56,
+                71,
+                6,
+                31,
+                49
+            ]
+        },
+        {
             "ruota": "Palermo",
             "numeri": [
                 30,
-                65
+                90
             ],
-            "score": 1017,
+            "score": 1509,
             "ultima_estrazione": [
                 85,
                 60,
@@ -173,7 +173,7 @@
                 3,
                 48
             ],
-            "score": 1011,
+            "score": 1494,
             "ultima_estrazione": [
                 42,
                 44,
@@ -188,7 +188,7 @@
                 40,
                 82
             ],
-            "score": 1006,
+            "score": 1488,
             "ultima_estrazione": [
                 46,
                 44,
@@ -203,7 +203,7 @@
                 5,
                 42
             ],
-            "score": 995,
+            "score": 1474,
             "ultima_estrazione": [
                 34,
                 11,
