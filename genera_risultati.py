@@ -1,154 +1,130 @@
 # genera_risultati.py
-# MOTORE 5 corretto:
-# - NON usa solo l’ultima estrzione
-# - usa storico recente
-# - evita ambi troppo vicini
-# - evita di copiare esattamente l’ultima estrazione
-# - salva anche ultima_estrazione per il sito
+# MOTORE 5 - versione corretta con logica reale
+# Fix bug:
+# - evita di usare l'ultima estrazione come previsione diretta
+# - ordina per score dal più alto al più basso
+# - TOP = migliori 3 ruote
+# - JOLLY = miglior TOP assoluto
+# - RUOTE = tutte ordinate per score
 
 import json
 from collections import Counter
-from itertools import combinations
 
-RUOTE = [
-    "Bari",
-    "Cagliari",
-    "Firenze",
-    "Genova",
-    "Milano",
-    "Napoli",
-    "Palermo",
-    "Roma",
-    "Torino",
-    "Venezia"
-]
-
-STORICO_ANALISI = 12       # quante estrazioni recenti analizzare
-DISTANZA_MINIMA = 8        # evita numeri troppo vicini
+FILE_INPUT = "estrazioni.json"
+FILE_OUTPUT = "risultati.json"
 
 
-def distanza_ok(a, b):
-    return abs(a - b) >= DISTANZA_MINIMA
+def carica_estrazioni():
+    with open(FILE_INPUT, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
-def genera_previsione(storico_ruota):
+def distanza(n1, n2):
+    """Distanza circolare sul lotto 1-90"""
+    d = abs(n1 - n2)
+    return min(d, 90 - d)
+
+
+def genera_coppie_forti(numeri_storici):
     """
-    storico_ruota esempio:
-    [
-        [31,34,54,63,51],
-        [17,22,45,80,11],
-        ...
+    Cerca le coppie più forti evitando:
+    - coppie identiche all'ultima estrazione
+    - numeri troppo vicini (tipo 41-42)
+    """
+
+    frequenze = Counter(numeri_storici)
+
+    numeri_frequenti = [
+        n for n, _ in frequenze.most_common(20)
     ]
-    """
 
-    if not storico_ruota:
-        return [1, 90], 0
+    migliori = []
+    ultima = set(numeri_storici[-5:]) if len(numeri_storici) >= 5 else set()
 
-    # ultima estrazione reale (solo per confronto)
-    ultima_estrazione = storico_ruota[-1]
+    for i in range(len(numeri_frequenti)):
+        for j in range(i + 1, len(numeri_frequenti)):
+            a = numeri_frequenti[i]
+            b = numeri_frequenti[j]
 
-    # ultime N estrazioni da analizzare
-    recenti = storico_ruota[-STORICO_ANALISI:]
+            # evita numeri troppo vicini
+            if abs(a - b) < 8:
+                continue
 
-    # conteggio frequenze
-    freq = Counter()
+            # evita copia ultima estrazione
+            if a in ultima and b in ultima:
+                continue
 
-    for estrazione in recenti:
-        for numero in estrazione:
-            freq[numero] += 1
+            # score con distanza + frequenza
+            score = (
+                frequenze[a]
+                + frequenze[b]
+                + distanza(a, b)
+            )
 
-    # numeri ordinati per frequenza
-    candidati = sorted(
-        freq.items(),
-        key=lambda x: (x[1], x[0]),
-        reverse=True
-    )
+            migliori.append({
+                "numeri": sorted([a, b]),
+                "score": score
+            })
 
-    candidati = [n for n, _ in candidati]
+    migliori.sort(key=lambda x: x["score"], reverse=True)
 
-    migliore_ambo = None
-    miglior_score = -1
+    if migliori:
+        return migliori[0]
 
-    # crea ambi dai candidati frequenti
-    for a, b in combinations(candidati[:15], 2):
-
-        # evita numeri troppo vicini
-        if not distanza_ok(a, b):
-            continue
-
-        # evita copia identica dell'ultima estrazione
-        if a in ultima_estrazione and b in ultima_estrazione:
-            continue
-
-        # score:
-        # frequenza + leggera distanza
-        score = (
-            freq[a] * 10 +
-            freq[b] * 10 +
-            abs(a - b)
-        )
-
-        if score > miglior_score:
-            miglior_score = score
-            migliore_ambo = sorted([a, b])
-
-    # fallback se non trova nulla
-    if not migliore_ambo:
-        pool = sorted(set(candidati[:10]))
-
-        for a, b in combinations(pool, 2):
-            if distanza_ok(a, b):
-                migliore_ambo = [a, b]
-                miglior_score = freq[a] * 10 + freq[b] * 10
-                break
-
-    if not migliore_ambo:
-        migliore_ambo = sorted(ultima_estrazione[:2])
-        miglior_score = 0
-
-    return migliore_ambo, round(miglior_score, 2)
+    # fallback sicurezza
+    return {
+        "numeri": [7, 29],
+        "score": 0
+    }
 
 
 def main():
-    with open("estrazioni.json", "r", encoding="utf-8") as f:
-        estrazioni = json.load(f)
+    dati = carica_estrazioni()
 
-    risultati = []
+    risultati_ruote = []
 
-    for ruota in RUOTE:
-        storico = estrazioni.get(ruota, [])
-
-        if not storico:
+    for ruota, estrazioni in dati.items():
+        if not estrazioni or len(estrazioni) < 2:
             continue
 
-        ultima_estrazione = storico[-1]
+        # ultima estrazione reale
+        ultima_estrazione = estrazioni[-1]
 
-        ambo, score = genera_previsione(storico)
+        # storico senza ultima estrazione
+        storico = estrazioni[:-1]
 
-        risultati.append({
+        # flatten storico
+        numeri_storici = []
+        for estrazione in storico:
+            numeri_storici.extend(estrazione)
+
+        migliore = genera_coppie_forti(numeri_storici)
+
+        risultati_ruote.append({
             "ruota": ruota,
-            "numeri": ambo,
-            "score": score,
+            "numeri": migliore["numeri"],
+            "score": migliore["score"],
             "ultima_estrazione": ultima_estrazione
         })
 
-    # ordina TOP veri
-    risultati.sort(
+    # ordine corretto: score alto -> basso
+    risultati_ruote.sort(
         key=lambda x: x["score"],
         reverse=True
     )
 
+    top3 = risultati_ruote[:3]
+
+    jolly = top3[0] if top3 else {}
+
     output = {
-        "top": risultati
+        "top": top3,
+        "jolly": jolly,
+        "ruote": risultati_ruote
     }
 
-    with open("risultati.json", "w", encoding="utf-8") as f:
-        json.dump(
-            output,
-            f,
-            indent=4,
-            ensure_ascii=False
-        )
+    with open(FILE_OUTPUT, "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=4, ensure_ascii=False)
 
     print("risultati.json aggiornato correttamente")
 
