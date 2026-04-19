@@ -1,115 +1,115 @@
 {
   "top": [
     {
-      "ruota": "Bari",
+      "ruota": "Firenze",
       "numeri": [
-        54,
-        63
+        36,
+        45
       ],
       "score": 47
     },
     {
-      "ruota": "Roma",
+      "ruota": "Bari",
       "numeri": [
-        73,
-        82
+        44,
+        52
       ],
-      "score": 47
+      "score": 44
     },
     {
       "ruota": "Cagliari",
       "numeri": [
-        40,
-        54
+        20,
+        31
       ],
       "score": 44
     }
   ],
   "jolly": {
-    "ruota": "Bari",
+    "ruota": "Firenze",
     "numeri": [
-      54,
-      63
+      36,
+      45
     ]
   },
   "ruote": [
     {
       "ruota": "Bari",
       "numeri": [
-        54,
-        63
+        44,
+        52
       ],
-      "score": 47
+      "score": 44
     },
     {
       "ruota": "Cagliari",
       "numeri": [
-        40,
-        54
+        20,
+        31
       ],
       "score": 44
     },
     {
       "ruota": "Firenze",
       "numeri": [
-        19,
-        26
+        36,
+        45
       ],
-      "score": 44
+      "score": 47
     },
     {
       "ruota": "Genova",
       "numeri": [
-        2,
-        9
+        75,
+        81
       ],
       "score": 44
     },
     {
       "ruota": "Milano",
       "numeri": [
-        68,
-        79
+        46,
+        59
       ],
       "score": 44
     },
     {
       "ruota": "Napoli",
       "numeri": [
-        23,
-        31
+        69,
+        75
       ],
       "score": 44
     },
     {
       "ruota": "Palermo",
       "numeri": [
-        63,
-        74
-      ],
-      "score": 44
-    },
-    {
-      "ruota": "Roma",
-      "numeri": [
-        73,
-        82
-      ],
-      "score": 47
-    },
-    {
-      "ruota": "Torino",
-      "numeri": [
-        27,
-        51
+        60,
+        81
       ],
       "score": 39
     },
     {
+      "ruota": "Roma",
+      "numeri": [
+        56,
+        71
+      ],
+      "score": 44
+    },
+    {
+      "ruota": "Torino",
+      "numeri": [
+        5,
+        15
+      ],
+      "score": 42
+    },
+    {
       "ruota": "Venezia",
       "numeri": [
-        15,
-        21
+        1,
+        12
       ],
       "score": 44
     }
