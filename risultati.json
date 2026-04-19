@@ -6,7 +6,7 @@
                 45,
                 80
             ],
-            "score": 540,
+            "score": 1045,
             "ultima_estrazione": [
                 69,
                 24,
@@ -21,7 +21,7 @@
                 42,
                 85
             ],
-            "score": 539,
+            "score": 1035,
             "ultima_estrazione": [
                 5,
                 15,
@@ -36,7 +36,7 @@
                 1,
                 56
             ],
-            "score": 533,
+            "score": 1031,
             "ultima_estrazione": [
                 20,
                 58,
@@ -52,7 +52,7 @@
             45,
             80
         ],
-        "score": 540,
+        "score": 1045,
         "ultima_estrazione": [
             69,
             24,
@@ -68,7 +68,7 @@
                 45,
                 80
             ],
-            "score": 540,
+            "score": 1045,
             "ultima_estrazione": [
                 69,
                 24,
@@ -83,7 +83,7 @@
                 42,
                 85
             ],
-            "score": 539,
+            "score": 1035,
             "ultima_estrazione": [
                 5,
                 15,
@@ -98,7 +98,7 @@
                 1,
                 56
             ],
-            "score": 533,
+            "score": 1031,
             "ultima_estrazione": [
                 20,
                 58,
@@ -113,7 +113,7 @@
                 18,
                 53
             ],
-            "score": 533,
+            "score": 1031,
             "ultima_estrazione": [
                 1,
                 32,
@@ -128,7 +128,7 @@
                 6,
                 45
             ],
-            "score": 531,
+            "score": 1023,
             "ultima_estrazione": [
                 56,
                 71,
@@ -138,12 +138,27 @@
             ]
         },
         {
+            "ruota": "Firenze",
+            "numeri": [
+                44,
+                73
+            ],
+            "score": 1021,
+            "ultima_estrazione": [
+                37,
+                23,
+                45,
+                36,
+                62
+            ]
+        },
+        {
             "ruota": "Palermo",
             "numeri": [
                 30,
-                76
+                65
             ],
-            "score": 530,
+            "score": 1017,
             "ultima_estrazione": [
                 85,
                 60,
@@ -158,7 +173,7 @@
                 3,
                 48
             ],
-            "score": 528,
+            "score": 1011,
             "ultima_estrazione": [
                 42,
                 44,
@@ -168,27 +183,12 @@
             ]
         },
         {
-            "ruota": "Firenze",
-            "numeri": [
-                35,
-                73
-            ],
-            "score": 527,
-            "ultima_estrazione": [
-                37,
-                23,
-                45,
-                36,
-                62
-            ]
-        },
-        {
             "ruota": "Milano",
             "numeri": [
                 40,
                 82
             ],
-            "score": 524,
+            "score": 1006,
             "ultima_estrazione": [
                 46,
                 44,
@@ -201,9 +201,9 @@
             "ruota": "Genova",
             "numeri": [
                 5,
-                47
+                42
             ],
-            "score": 517,
+            "score": 995,
             "ultima_estrazione": [
                 34,
                 11,
