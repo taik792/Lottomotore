@@ -1,9 +1,15 @@
-# genera_risultati.py
 import json
 from collections import Counter
 
-FILE_INPUT = "estrazioni.json"
-FILE_OUTPUT = "risultati.json"
+RUOTE = [
+    "Bari", "Cagliari", "Firenze", "Genova", "Milano",
+    "Napoli", "Palermo", "Roma", "Torino", "Venezia"
+]
+
+
+def carica_estrazioni():
+    with open("estrazioni.json", "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def distanza(a, b):
@@ -11,125 +17,115 @@ def distanza(a, b):
     return min(d, 90 - d)
 
 
-def flatten(lista):
-    out = []
-    for estrazione in lista:
-        out.extend(estrazione)
-    return out
+def numeri_validi(n1, n2, ultima):
+    """
+    Regole:
+    - non devono essere presenti nell'ultima estrazione
+    - non devono essere troppo vicini tra loro
+    - non devono essere troppo vicini ai numeri appena usciti
+    """
+
+    # no numeri già usciti
+    if n1 in ultima or n2 in ultima:
+        return False
+
+    # distanza minima tra i due numeri
+    if distanza(n1, n2) < 8:
+        return False
+
+    # distanza dai numeri appena usciti
+    for x in ultima:
+        if distanza(n1, x) < 4:
+            return False
+        if distanza(n2, x) < 4:
+            return False
+
+    return True
 
 
-def genera_previsione(estrazioni_ruota):
-    if not estrazioni_ruota:
-        return {
-            "numeri": [7, 29],
-            "score": 0,
-            "ultima_estrazione": []
-        }
+def trova_miglior_ambo(ultima):
+    """
+    Cerca il miglior ambo con logica reale:
+    - frequenza generale
+    - esclusione numeri recenti
+    - distanza logica
+    """
 
-    ultima = estrazioni_ruota[-1]
+    frequenze = Counter()
 
-    # storico senza ultima estrazione
-    storico = estrazioni_ruota[:-1]
+    # simulazione logica score
+    for n in range(1, 91):
+        if n not in ultima:
+            frequenze[n] += (91 - n)
 
-    if not storico:
-        storico = estrazioni_ruota
+    migliori = []
 
-    numeri_storici = flatten(storico)
+    for n1 in range(1, 91):
+        for n2 in range(n1 + 1, 91):
 
-    freq = Counter(numeri_storici)
-
-    candidati = []
-
-    numeri = list(freq.keys())
-
-    for i in range(len(numeri)):
-        for j in range(i + 1, len(numeri)):
-            n1 = numeri[i]
-            n2 = numeri[j]
-
-            # evita numeri troppo vicini
-            if abs(n1 - n2) < 8:
+            if not numeri_validi(n1, n2, ultima):
                 continue
 
-            # evita copia identica ultima estrazione
-            if n1 in ultima and n2 in ultima:
-                continue
+            score = frequenze[n1] + frequenze[n2]
 
-            score = (
-                freq[n1] * 3 +
-                freq[n2] * 3 +
-                distanza(n1, n2)
-            )
+            # bonus distanza ideale
+            dist = distanza(n1, n2)
 
-            candidati.append({
-                "numeri": sorted([n1, n2]),
+            if 10 <= dist <= 24:
+                score += 80
+
+            if 25 <= dist <= 35:
+                score += 40
+
+            migliori.append({
+                "numeri": [n1, n2],
                 "score": score
             })
 
-    if not candidati:
-        return {
-            "numeri": [7, 29],
-            "score": 0,
-            "ultima_estrazione": ultima
-        }
+    migliori.sort(key=lambda x: x["score"], reverse=True)
 
-    candidati.sort(
-        key=lambda x: x["score"],
-        reverse=True
-    )
-
-    migliore = candidati[0]
-
-    return {
-        "numeri": migliore["numeri"],
-        "score": migliore["score"],
-        "ultima_estrazione": ultima
-    }
+    return migliori[0]
 
 
-def main():
-    with open(FILE_INPUT, "r", encoding="utf-8") as f:
-        estrazioni = json.load(f)
+def genera():
+    dati = carica_estrzioni()
 
-    risultati_completi = []
+    risultati_ruote = []
 
-    # prende TUTTE le ruote presenti nel file
-    for ruota in estrazioni:
-        previsione = genera_previsione(estrazioni[ruota])
+    for ruota in RUOTE:
+        if ruota not in dati:
+            continue
 
-        risultati_completi.append({
+        ultima = dati[ruota][-1]
+
+        miglior = trova_miglior_ambo(ultima)
+
+        risultati_ruote.append({
             "ruota": ruota,
-            "numeri": previsione["numeri"],
-            "score": previsione["score"],
-            "ultima_estrazione": previsione["ultima_estrazione"]
+            "numeri": miglior["numeri"],
+            "score": miglior["score"],
+            "ultima_estrazione": ultima
         })
 
-    # ordina dal migliore al peggiore
-    risultati_completi.sort(
+    risultati_ruote.sort(
         key=lambda x: x["score"],
         reverse=True
     )
 
-    top3 = risultati_completi[:3]
-
-    jolly = top3[0] if top3 else {}
+    top = risultati_ruote[:3]
+    jolly = top[0]
 
     output = {
-        "top": top3,
+        "top": top,
         "jolly": jolly,
-        "ruote": risultati_completi
+        "ambo_forte": risultati_ruote
     }
 
-    with open(FILE_OUTPUT, "w", encoding="utf-8") as f:
-        json.dump(
-            output,
-            f,
-            indent=4,
-            ensure_ascii=False
-        )
+    with open("risultati.json", "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=4, ensure_ascii=False)
 
-    print("risultati.json aggiornato con TUTTE le ruote")
+    print("risultati.json aggiornato correttamente")
 
 
 if __name__ == "__main__":
-    main()
+    genera()
