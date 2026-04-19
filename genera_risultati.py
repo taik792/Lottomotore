@@ -88,7 +88,7 @@ def trova_miglior_ambo(ultima):
 
 
 def genera():
-    dati = carica_estrzioni()
+    dati = carica_estrazioni()
 
     risultati_ruote = []
 
