@@ -1,18 +1,18 @@
 {
     "top": [
         {
-            "ruota": "Firenze",
+            "ruota": "Bari",
             "numeri": [
-                33,
-                47
+                41,
+                67
             ],
-            "score": 1392,
+            "score": 1564,
             "ultima_estrazione": [
-                90,
-                88,
                 22,
-                5,
-                60
+                71,
+                52,
+                35,
+                2
             ]
         },
         {
@@ -21,150 +21,105 @@
                 26,
                 41
             ],
-            "score": 1384,
+            "score": 1400,
             "ultima_estrazione": [
-                59,
-                6,
-                70,
-                50,
-                11
-            ]
-        },
-        {
-            "ruota": "Palermo",
-            "numeri": [
-                45,
-                90
-            ],
-            "score": 1216,
-            "ultima_estrazione": [
-                10,
-                55,
-                72,
-                15,
-                28
-            ]
-        }
-    ],
-    "jolly": {
-        "ruota": "Firenze",
-        "numeri": [
-            33,
-            47
-        ],
-        "score": 1392,
-        "ultima_estrazione": [
-            90,
-            88,
-            22,
-            5,
-            60
-        ]
-    },
-    "ambo_forte": [
-        {
-            "ruota": "Firenze",
-            "numeri": [
                 33,
-                47
-            ],
-            "score": 1392,
-            "ultima_estrazione": [
-                90,
-                88,
-                22,
-                5,
+                7,
+                64,
+                51,
                 60
-            ]
-        },
-        {
-            "ruota": "Cagliari",
-            "numeri": [
-                26,
-                41
-            ],
-            "score": 1384,
-            "ultima_estrazione": [
-                59,
-                6,
-                70,
-                50,
-                11
-            ]
-        },
-        {
-            "ruota": "Palermo",
-            "numeri": [
-                45,
-                90
-            ],
-            "score": 1216,
-            "ultima_estrazione": [
-                10,
-                55,
-                72,
-                15,
-                28
-            ]
-        },
-        {
-            "ruota": "Torino",
-            "numeri": [
-                49,
-                65
-            ],
-            "score": 1184,
-            "ultima_estrazione": [
-                75,
-                76,
-                32,
-                26,
-                87
             ]
         },
         {
             "ruota": "Napoli",
             "numeri": [
                 1,
-                36
+                40
             ],
-            "score": 1124,
+            "score": 1352,
             "ultima_estrazione": [
-                43,
-                9,
-                48,
-                16,
-                32
+                7,
+                73,
+                55,
+                6,
+                61
             ]
-        },
-        {
-            "ruota": "Roma",
-            "numeri": [
-                17,
-                37
-            ],
-            "score": 1104,
-            "ultima_estrazione": [
-                67,
-                32,
-                13,
-                41,
-                4
-            ]
-        },
+        }
+    ],
+    "jolly": {
+        "ruota": "Bari",
+        "numeri": [
+            41,
+            67
+        ],
+        "score": 1564,
+        "ultima_estrazione": [
+            22,
+            71,
+            52,
+            35,
+            2
+        ]
+    },
+    "ambo_forte": [
         {
             "ruota": "Bari",
             "numeri": [
-                3,
+                41,
                 67
             ],
-            "score": 1084,
+            "score": 1564,
             "ultima_estrazione": [
-                9,
+                22,
                 71,
-                42,
+                52,
+                35,
+                2
+            ]
+        },
+        {
+            "ruota": "Cagliari",
+            "numeri": [
+                26,
+                41
+            ],
+            "score": 1400,
+            "ultima_estrazione": [
+                33,
+                7,
+                64,
+                51,
+                60
+            ]
+        },
+        {
+            "ruota": "Napoli",
+            "numeri": [
+                1,
+                40
+            ],
+            "score": 1352,
+            "ultima_estrazione": [
+                7,
                 73,
-                26
+                55,
+                6,
+                61
+            ]
+        },
+        {
+            "ruota": "Palermo",
+            "numeri": [
+                45,
+                90
+            ],
+            "score": 1232,
+            "ultima_estrazione": [
+                19,
+                41,
+                84,
+                77,
+                50
             ]
         },
         {
@@ -173,43 +128,88 @@
                 49,
                 66
             ],
-            "score": 1048,
+            "score": 1064,
+            "ultima_estrazione": [
+                84,
+                5,
+                61,
+                81,
+                2
+            ]
+        },
+        {
+            "ruota": "Roma",
+            "numeri": [
+                34,
+                64
+            ],
+            "score": 1004,
+            "ultima_estrazione": [
+                9,
+                6,
+                69,
+                15,
+                38
+            ]
+        },
+        {
+            "ruota": "Venezia",
+            "numeri": [
+                17,
+                79
+            ],
+            "score": 996,
+            "ultima_estrazione": [
+                55,
+                37,
+                67,
+                49,
+                54
+            ]
+        },
+        {
+            "ruota": "Firenze",
+            "numeri": [
+                67,
+                78
+            ],
+            "score": 960,
             "ultima_estrazione": [
                 23,
-                11,
-                79,
-                17,
-                40
+                47,
+                73,
+                31,
+                38
             ]
         },
         {
             "ruota": "Milano",
             "numeri": [
                 61,
-                77
+                88
             ],
-            "score": 1048,
+            "score": 916,
             "ultima_estrazione": [
-                7,
-                16,
-                54,
-                20,
-                30
+                22,
+                41,
+                75,
+                10,
+                46
             ]
         },
         {
-            "ruota": "Venezia",
+            "ruota": "Torino",
             "numeri": [
-                63,
-                79
+                13,
+                59
             ],
-            "score": 920,
+            "score": 736,
             "ultima_estrazione": [
-                48,
-                52,
-                35,
-                54,
-                19
+                46,
+                89,
+                21,
+                26,
+                67
             ]
         }
     ]
