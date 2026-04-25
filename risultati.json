@@ -6,7 +6,7 @@
                 41,
                 67
             ],
-            "score": 1580,
+            "score": 2680,
             "ultima_estrazione": [
                 15,
                 88,
@@ -16,33 +16,33 @@
             ]
         },
         {
-            "ruota": "Napoli",
+            "ruota": "Milano",
             "numeri": [
-                1,
-                40
+                77,
+                88
             ],
-            "score": 1368,
+            "score": 2380,
             "ultima_estrazione": [
-                83,
-                72,
-                60,
-                16,
-                21
+                71,
+                43,
+                45,
+                25,
+                3
             ]
         },
         {
-            "ruota": "Palermo",
+            "ruota": "Roma",
             "numeri": [
-                45,
-                90
+                17,
+                40
             ],
-            "score": 1248,
+            "score": 2344,
             "ultima_estrazione": [
-                75,
-                78,
-                68,
-                80,
-                76
+                13,
+                25,
+                67,
+                83,
+                78
             ]
         }
     ],
@@ -52,7 +52,7 @@
             41,
             67
         ],
-        "score": 1580,
+        "score": 2680,
         "ultima_estrazione": [
             15,
             88,
@@ -68,7 +68,7 @@
                 41,
                 67
             ],
-            "score": 1580,
+            "score": 2680,
             "ultima_estrazione": [
                 15,
                 88,
@@ -78,12 +78,72 @@
             ]
         },
         {
+            "ruota": "Milano",
+            "numeri": [
+                77,
+                88
+            ],
+            "score": 2380,
+            "ultima_estrazione": [
+                71,
+                43,
+                45,
+                25,
+                3
+            ]
+        },
+        {
+            "ruota": "Roma",
+            "numeri": [
+                17,
+                40
+            ],
+            "score": 2344,
+            "ultima_estrazione": [
+                13,
+                25,
+                67,
+                83,
+                78
+            ]
+        },
+        {
+            "ruota": "Firenze",
+            "numeri": [
+                33,
+                67
+            ],
+            "score": 2312,
+            "ultima_estrazione": [
+                7,
+                85,
+                14,
+                84,
+                55
+            ]
+        },
+        {
+            "ruota": "Torino",
+            "numeri": [
+                49,
+                68
+            ],
+            "score": 2236,
+            "ultima_estrazione": [
+                30,
+                39,
+                63,
+                72,
+                81
+            ]
+        },
+        {
             "ruota": "Napoli",
             "numeri": [
                 1,
                 40
             ],
-            "score": 1368,
+            "score": 2228,
             "ultima_estrazione": [
                 83,
                 72,
@@ -98,7 +158,7 @@
                 45,
                 90
             ],
-            "score": 1248,
+            "score": 2208,
             "ultima_estrazione": [
                 75,
                 78,
@@ -108,87 +168,12 @@
             ]
         },
         {
-            "ruota": "Cagliari",
-            "numeri": [
-                41,
-                63
-            ],
-            "score": 1192,
-            "ultima_estrazione": [
-                49,
-                22,
-                46,
-                28,
-                86
-            ]
-        },
-        {
-            "ruota": "Roma",
-            "numeri": [
-                7,
-                17
-            ],
-            "score": 1144,
-            "ultima_estrazione": [
-                13,
-                25,
-                67,
-                83,
-                78
-            ]
-        },
-        {
-            "ruota": "Torino",
-            "numeri": [
-                49,
-                88
-            ],
-            "score": 1136,
-            "ultima_estrazione": [
-                30,
-                39,
-                63,
-                72,
-                81
-            ]
-        },
-        {
-            "ruota": "Milano",
-            "numeri": [
-                61,
-                77
-            ],
-            "score": 1080,
-            "ultima_estrazione": [
-                71,
-                43,
-                45,
-                25,
-                3
-            ]
-        },
-        {
-            "ruota": "Firenze",
-            "numeri": [
-                33,
-                78
-            ],
-            "score": 1056,
-            "ultima_estrazione": [
-                7,
-                85,
-                14,
-                84,
-                55
-            ]
-        },
-        {
             "ruota": "Venezia",
             "numeri": [
-                17,
+                39,
                 79
             ],
-            "score": 1012,
+            "score": 2032,
             "ultima_estrazione": [
                 13,
                 55,
@@ -200,16 +185,31 @@
         {
             "ruota": "Genova",
             "numeri": [
-                6,
-                49
+                3,
+                53
             ],
-            "score": 960,
+            "score": 1976,
             "ultima_estrazione": [
                 89,
                 69,
                 88,
                 41,
                 81
+            ]
+        },
+        {
+            "ruota": "Cagliari",
+            "numeri": [
+                41,
+                63
+            ],
+            "score": 1972,
+            "ultima_estrazione": [
+                49,
+                22,
+                46,
+                28,
+                86
             ]
         }
     ]
