@@ -19,12 +19,12 @@ def distanza(a, b):
 
 def calcola_frequenze_reali(estrazioni_ruota):
     """
-    Usa le ultime 30 estrazioni vere della ruota
+    Usa le ultime 500 estrazioni vere della ruota
     per calcolare frequenze reali
     """
     freq = Counter()
 
-    ultime = estrazioni_ruota[-30:] if len(estrazioni_ruota) >= 30 else estrazioni_ruota
+    ultime = estrazioni_ruota[-500:] if len(estrazioni_ruota) >= 500 else estrazioni_ruota
 
     for estrazione in ultime:
         for numero in estrazione:
